@@ -11,10 +11,6 @@ const initState = {
   ]
 };
 
-const links = {
-  links: [{ heading: "SignIn", href: "/signin" }]
-};
-
 let socket;
 
 function reducer(state, action) {
@@ -34,8 +30,23 @@ function sendChatAction(value) {
   socket.emit("chat message", value);
 }
 
-const Store = (props) => {
+const Store = props => {
   const [allChats, dispatch] = React.useReducer(reducer, initState);
+  const [newLink, setNewLink] = React.useState({ topics: "" });
+  const [chats, setChats] = React.useState({ chats: [] });
+
+  React.useEffect(() => {
+    fetch("http://localhost:5000/api/topics")
+      .then(res => res.json())
+      .then(result => {
+        setNewLink({ topics: result.result });
+      });
+  }, []);
+
+  React.useEffect(() => {
+    fetch("http://localhost:5000/api/chats");
+  });
+
   if (!socket) {
     socket = io(":3001");
     socket.on("chat message", function(msg) {
@@ -43,7 +54,7 @@ const Store = (props) => {
     });
   }
   return (
-    <storeCTX.Provider value={{ allChats, sendChatAction, links }}>
+    <storeCTX.Provider value={{ allChats, sendChatAction, newLink }}>
       {props.children}
     </storeCTX.Provider>
   );

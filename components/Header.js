@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  makeStyles,
-  /* useTheme, */
-  Theme,
-  createStyles
-} from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -21,7 +16,7 @@ import { storeCTX } from "./Store";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       display: "flex",
@@ -49,15 +44,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const Header = (props) => {
+const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { links } = React.useContext(storeCTX);
-  /* const theme = useTheme(); */
+  const { newLink } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const topic = Object.keys(links);
-  const [head] = React.useState(topic[0]);
+  const topic = Object.values(newLink.topics);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -67,15 +59,14 @@ const Header = (props) => {
     <div>
       <Divider />
       <List>
-        {links[head].map((text) => (
-          <ListItem button component="a" key={text} href={text.href}>
-            <ListItemText primary={"#" + text.heading} />
+        {topic.map(key => (
+          <ListItem button component="a" key={key} href={key}>
+            <ListItemText primary={"#" + key} />
           </ListItem>
         ))}
       </List>
     </div>
   );
-
   return (
     <div className={classes.root}>
       <AppBar position="sticky" className={classes.color}>
@@ -111,15 +102,6 @@ const Header = (props) => {
             {drawer}
           </Drawer>
         </Hidden>
-        {/* <Hidden xsDown implementation="css"> */}
-        {/*   <Drawer */}
-        {/*     classes={{ paper: classes.drawerPaper }} */}
-        {/*     variant="permanent" */}
-        {/*     open */}
-        {/*   > */}
-        {/*     {drawer} */}
-        {/*   </Drawer> */}
-        {/* </Hidden> */}
       </nav>
     </div>
   );
