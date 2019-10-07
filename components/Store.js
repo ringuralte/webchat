@@ -3,15 +3,9 @@ import io from "socket.io-client";
 
 export const storeCTX = React.createContext();
 
-const initState = {
-  chats: [
-    { sender: "meone", msg: "store message from meone" },
-    { sender: "metwo", msg: "switched to a store style" },
-    { sender: "meone", msg: "i hope it works though" }
-  ]
-};
-
 let socket;
+
+const initState = {};
 
 function reducer(state, action) {
   const { sender, msg, topic } = action.payload;
@@ -21,6 +15,8 @@ function reducer(state, action) {
         ...state,
         [topic]: [...state[topic], { sender, msg }]
       };
+    case "FETCH MESSAGE":
+      return action.payload;
     default:
       return state;
   }
@@ -31,21 +27,25 @@ function sendChatAction(value) {
 }
 
 const Store = props => {
+  const [newLink, setNewLink] = React.useState({});
   const [allChats, dispatch] = React.useReducer(reducer, initState);
-  const [newLink, setNewLink] = React.useState({ topics: "" });
-  const [chats, setChats] = React.useState({ chats: [] });
 
   React.useEffect(() => {
     fetch("http://localhost:5000/api/topics")
       .then(res => res.json())
       .then(result => {
-        setNewLink({ topics: result.result });
+        setNewLink(result.rows);
       });
   }, []);
 
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/chats");
-  });
+    fetch("http://localhost:5000/api/getChats")
+      .then(res => res.json())
+      .then(result => {
+        dispatch({ type: "FETCH MESSAGE", payload: result.rows });
+      })
+      .catch(err => alert(err));
+  }, []);
 
   if (!socket) {
     socket = io(":3001");

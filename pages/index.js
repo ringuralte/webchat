@@ -37,8 +37,10 @@ const useStyles = makeStyles(theme =>
 const Home = () => {
   const classes = useStyles();
   const { allChats, sendChatAction } = React.useContext(storeCTX);
+  // console.log(allChats);
 
   const topic = Object.keys(allChats);
+  console.log(allChats);
 
   const [msg] = React.useState(topic[0]);
 
@@ -47,10 +49,10 @@ const Home = () => {
       <Layout>
         <Paper square className={classes.paper}>
           <List className={classes.chatContainer}>
-            {allChats[msg].map(key => (
-              <ListItem key={key}>
-                <ListItemText primary={key.sender} />
-                <ListItemText primary={key.msg} />
+            {Object.keys(allChats).map(key => (
+              <ListItem key={allChats[key].id}>
+                <ListItemText primary={allChats[key].sender} />
+                <ListItemText primary={allChats[key].msg} />
               </ListItem>
             ))}
           </List>

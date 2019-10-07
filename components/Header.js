@@ -49,7 +49,7 @@ const Header = props => {
   const classes = useStyles();
   const { newLink } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const topic = Object.values(newLink.topics);
+  // const topic = Object.values(newLink.topics);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -59,9 +59,9 @@ const Header = props => {
     <div>
       <Divider />
       <List>
-        {topic.map(key => (
+        {Object.keys(newLink).map(key => (
           <ListItem button component="a" key={key} href={key}>
-            <ListItemText primary={"#" + key} />
+            <ListItemText primary={"#" + newLink[key].title} />
           </ListItem>
         ))}
       </List>
