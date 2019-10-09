@@ -1,9 +1,12 @@
+//TODO put sendChatAction here and return a legit value to the reducer
 import React from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import ToolBar from "@material-ui/core/Toolbar";
+
+import { storeCTX } from "../components/Store";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -27,20 +30,38 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const Textbox = (props) => {
+const Textbox = props => {
   const classes = useStyles();
+  const { sendChatAction } = React.useContext(storeCTX);
 
-  const enterKeyPress = (e) => {
+  const enterKeyPress = e => {
     if (e.keyCode == 13) {
-      props.sendChatAction({
-        sender: "merandom",
-        msg: textValue,
-        topic: props.topic
-      });
-      changeTextValue("");
+      handleSubmit(e);
     }
   };
   const [textValue, changeTextValue] = React.useState("");
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    fetch("http://localhost:5000/api/postChat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        sender: "sad",
+        msg: textValue
+      })
+    })
+      .then(res => res.json())
+      .then(chat => {
+        sendChatAction({
+          id: chat.id,
+          sender: "sad",
+          msg: textValue
+        });
+        changeTextValue("");
+      });
+  };
 
   return (
     <AppBar position="fixed" className={classes.bar}>
@@ -56,14 +77,15 @@ const Textbox = (props) => {
           className={classes.chatButton}
           variant="contained"
           color="secondary"
-          onClick={() => {
-            props.sendChatAction({
-              sender: "merandom",
-              msg: textValue,
-              topic: props.topic
-            });
-            changeTextValue("");
-          }}
+          onClick={handleSubmit}
+          // onClick={() => {
+          //   sendChatAction({
+          //     id: 10,
+          //     sender: "sad",
+          //     msg: textValue
+          //   });
+          //   changeTextValue("");
+          // }}
         >
           Send
         </Button>

@@ -36,13 +36,12 @@ const useStyles = makeStyles(theme =>
 
 const Home = () => {
   const classes = useStyles();
-  const { allChats, sendChatAction } = React.useContext(storeCTX);
-  // console.log(allChats);
+  const { allChats } = React.useContext(storeCTX);
 
-  const topic = Object.keys(allChats);
+  // const topic = Object.keys(allChats);
   console.log(allChats);
 
-  const [msg] = React.useState(topic[0]);
+  // const [msg] = React.useState(topic[0]);
 
   return (
     <React.Fragment>
@@ -58,7 +57,7 @@ const Home = () => {
           </List>
         </Paper>
       </Layout>
-      <Textbox msg={msg} sendChatAction={sendChatAction} topic={topic} />
+      <Textbox />
     </React.Fragment>
   );
 };

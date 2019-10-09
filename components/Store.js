@@ -8,13 +8,12 @@ let socket;
 const initState = {};
 
 function reducer(state, action) {
-  const { sender, msg, topic } = action.payload;
+  const prevState = { ...state };
+  const length = Object.keys(prevState).length;
+  prevState[length + 1] = action.payload;
   switch (action.type) {
     case "RECEIVE MESSAGE":
-      return {
-        ...state,
-        [topic]: [...state[topic], { sender, msg }]
-      };
+      return prevState;
     case "FETCH MESSAGE":
       return action.payload;
     default:
