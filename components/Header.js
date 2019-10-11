@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Divider from "@material-ui/core/Divider";
@@ -49,7 +50,6 @@ const Header = props => {
   const classes = useStyles();
   const { newLink } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  // const topic = Object.values(newLink.topics);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -61,7 +61,9 @@ const Header = props => {
       <List>
         {Object.keys(newLink).map(key => (
           <ListItem button component="a" key={key} href={key}>
-            <ListItemText primary={"#" + newLink[key].title} />
+            <Link href={newLink[key].title} title={newLink[key].title}>
+              <ListItemText primary={"#" + newLink[key].title} />
+            </Link>
           </ListItem>
         ))}
       </List>

@@ -1,6 +1,7 @@
 //TODO try switching to functional components and hooks later can't implement a correct fetch method otherwise
 
 import React from "react";
+import Router from "next/router";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -54,9 +55,9 @@ const SignIn = () => {
       .then(res => res.json())
       .then(response => {
         if (response.code === 200) {
-          alert(response.code + " " + response.message);
           setUserName("");
           setPassword("");
+          Router.push("/");
         } else {
           alert(response.code + " " + response.message);
         }

@@ -30,7 +30,7 @@ const Store = props => {
   const [allChats, dispatch] = React.useReducer(reducer, initState);
 
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/topics")
+    fetch("http://localhost:5000/api/topics", { credentials: "include" })
       .then(res => res.json())
       .then(result => {
         setNewLink(result.rows);
@@ -38,10 +38,12 @@ const Store = props => {
   }, []);
 
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/getChats")
+    fetch("http://localhost:5000/api/getChats", { credentials: "include" })
       .then(res => res.json())
       .then(result => {
-        dispatch({ type: "FETCH MESSAGE", payload: result.rows });
+        if (result.code !== 401) {
+          dispatch({ type: "FETCH MESSAGE", payload: result.rows });
+        }
       })
       .catch(err => alert(err));
   }, []);

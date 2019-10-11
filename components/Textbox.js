@@ -54,12 +54,17 @@ const Textbox = props => {
     })
       .then(res => res.json())
       .then(chat => {
-        sendChatAction({
-          id: chat.id,
-          sender: "sad",
-          msg: textValue
-        });
-        changeTextValue("");
+        if (chat.code === 401) {
+          alert(chat.message);
+          changeTextValue("");
+        } else {
+          sendChatAction({
+            id: chat.id,
+            sender: "sad",
+            msg: textValue
+          });
+          changeTextValue("");
+        }
       });
   };
 
