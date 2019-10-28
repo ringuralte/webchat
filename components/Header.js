@@ -48,8 +48,9 @@ const useStyles = makeStyles(theme =>
 const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { newLink } = React.useContext(storeCTX);
+  const { newLink, topic, setTopic } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const [topic, setTopic] = React.useState("");
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -60,12 +61,29 @@ const Header = props => {
       <Divider />
       <List>
         {Object.keys(newLink).map(key => (
-          <ListItem button component="a" key={key} href={key}>
-            <Link href={newLink[key].title} title={newLink[key].title}>
+          <ListItem
+            button
+            key={key}
+            onClick={() => {
+              setTopic(newLink[key]);
+              setMobileOpen(!mobileOpen);
+            }}
+          >
+            <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
               <ListItemText primary={"#" + newLink[key].title} />
             </Link>
           </ListItem>
         ))}
+        <ListItem button>
+          <Link href="/signin">
+            <ListItemText primary={"#" + "signin"} />
+          </Link>
+        </ListItem>
+        <ListItem button>
+          <Link href="/signup">
+            <ListItemText primary={"#" + "signup"} />
+          </Link>
+        </ListItem>
       </List>
     </div>
   );
@@ -84,7 +102,7 @@ const Header = props => {
           <Typography variant="h5" className={classes.title}>
             Chat App
           </Typography>
-          <Typography variant="subtitle2">#Topic</Typography>
+          <Typography variant="subtitle2">{topic.title}</Typography>
         </Toolbar>
       </AppBar>
       <nav aria-label="drawer" className={classes.drawer}>

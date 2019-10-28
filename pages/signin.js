@@ -11,6 +11,8 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import fetch from "isomorphic-unfetch";
 
+import { storeCTX } from "../components/Store";
+
 const useStyles = makeStyles(theme =>
   createStyles({
     paper: {
@@ -41,6 +43,8 @@ const SignIn = () => {
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const { setUser } = React.useContext(storeCTX);
+
   const signIn = e => {
     e.preventDefault();
     fetch("http://localhost:5000/api/signIn", {
@@ -57,6 +61,7 @@ const SignIn = () => {
         if (response.code === 200) {
           setUserName("");
           setPassword("");
+          setUser(response.user);
           Router.push("/");
         } else {
           alert(response.code + " " + response.message);

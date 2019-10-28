@@ -28,6 +28,11 @@ function sendChatAction(value) {
 const Store = props => {
   const [newLink, setNewLink] = React.useState({});
   const [allChats, dispatch] = React.useReducer(reducer, initState);
+  const [user, setUser] = React.useState("");
+
+  //topic should not be confused with newLink, newLink fetches data from server
+  //while topic is just used for UI stuffs in header component
+  const [topic, setTopic] = React.useState("");
 
   React.useEffect(() => {
     fetch("http://localhost:5000/api/topics", { credentials: "include" })
@@ -37,17 +42,6 @@ const Store = props => {
       });
   }, []);
 
-  React.useEffect(() => {
-    fetch("http://localhost:5000/api/getChats", { credentials: "include" })
-      .then(res => res.json())
-      .then(result => {
-        if (result.code !== 401) {
-          dispatch({ type: "FETCH MESSAGE", payload: result.rows });
-        }
-      })
-      .catch(err => alert(err));
-  }, []);
-
   if (!socket) {
     socket = io(":3001");
     socket.on("chat message", function(msg) {
@@ -55,7 +49,18 @@ const Store = props => {
     });
   }
   return (
-    <storeCTX.Provider value={{ allChats, sendChatAction, newLink }}>
+    <storeCTX.Provider
+      value={{
+        allChats,
+        dispatch,
+        sendChatAction,
+        newLink,
+        user,
+        setUser,
+        topic,
+        setTopic
+      }}
+    >
       {props.children}
     </storeCTX.Provider>
   );

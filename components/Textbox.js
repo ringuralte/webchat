@@ -30,9 +30,9 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const Textbox = props => {
+const Textbox = () => {
   const classes = useStyles();
-  const { sendChatAction } = React.useContext(storeCTX);
+  const { sendChatAction, user, topic } = React.useContext(storeCTX);
 
   const enterKeyPress = e => {
     if (e.keyCode == 13) {
@@ -48,7 +48,8 @@ const Textbox = props => {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
-        sender: "sad",
+        topic: topic.id,
+        sender: user,
         msg: textValue
       })
     })
@@ -60,7 +61,7 @@ const Textbox = props => {
         } else {
           sendChatAction({
             id: chat.id,
-            sender: "sad",
+            sender: user,
             msg: textValue
           });
           changeTextValue("");
@@ -83,14 +84,6 @@ const Textbox = props => {
           variant="contained"
           color="secondary"
           onClick={handleSubmit}
-          // onClick={() => {
-          //   sendChatAction({
-          //     id: 10,
-          //     sender: "sad",
-          //     msg: textValue
-          //   });
-          //   changeTextValue("");
-          // }}
         >
           Send
         </Button>
