@@ -29,6 +29,7 @@ const Store = props => {
   const [newLink, setNewLink] = React.useState({});
   const [allChats, dispatch] = React.useReducer(reducer, initState);
   const [user, setUser] = React.useState("");
+  const [error, setError] = React.useState("");
 
   //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
@@ -58,7 +59,9 @@ const Store = props => {
         user,
         setUser,
         topic,
-        setTopic
+        setTopic,
+        error,
+        setError
       }}
     >
       {props.children}

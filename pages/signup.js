@@ -1,4 +1,5 @@
 import React from "react";
+import Router from "next/router";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -6,6 +7,9 @@ import Container from "@material-ui/core/Container";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
 import fetch from "isomorphic-unfetch";
+
+import { storeCTX } from "../components/Store";
+import Errorbox from "../components/Errorbox";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -35,6 +39,8 @@ const SignUp = () => {
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
+  const { error, setError } = React.useContext(storeCTX);
+
   const signUp = e => {
     e.preventDefault();
     if (password === confirmPassword) {
@@ -46,21 +52,32 @@ const SignUp = () => {
         }),
         headers: { "Content-Type": "application/json" }
       })
-        .then(res => res.json)
-        .catch(err => alert(err));
+        .then(res => res.json())
+        .then(response => {
+          if (response.code === 400) {
+            setError(response.msg);
+          } else if (response.code === 200) {
+            Router.push("/");
+          }
+        })
+        .catch(err => alert(err.message));
     } else {
-      alert("wrong password");
+      setError("Password does not match");
     }
+    setUserName("");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
     <Layout>
       <Container component="main" maxWidth="xs">
+        <Errorbox error={error} />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={signUp}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -105,9 +122,9 @@ const SignUp = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={() => {
-                signUp();
-              }}
+              // onClick={() => {
+              //   signUp();
+              // }}
             >
               Sign Up
             </Button>

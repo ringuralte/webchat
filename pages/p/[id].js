@@ -7,12 +7,15 @@ import { storeCTX } from "../../components/Store";
 
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
+import ScrollToBottom from "react-scroll-to-bottom";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Cookies from "js-cookie";
 
 import fetch from "isomorphic-unfetch";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -25,19 +28,26 @@ const useStyles = makeStyles(theme =>
       padding: "1rem",
       display: "flex",
       flexDirection: "column",
-      minHeight: "90vh"
+      minHeight: "90vh",
+      background: "#292d3e"
     },
     chatItems: {
       paddingLeft: 0,
-      paddingRight: 0
+      paddingRight: "25vw",
+      color: "#ffcb6b"
     },
     chatItemsUser: {
-      paddingLeft: 0,
+      paddingLeft: "25vw",
       paddingRight: 0,
-      textAlign: "right"
+      textAlign: "right",
+      color: "#84ffff"
+    },
+    senderName: {
+      color: "#f07178"
     },
     paper: {
-      paddingBottom: 50
+      paddingBottom: 50,
+      paddingTop: 100
     },
     chat: {
       flexGrow: 1
@@ -50,13 +60,29 @@ const useStyles = makeStyles(theme =>
 
 const ChatRooms = () => {
   const classes = useStyles();
-  const { user, allChats, dispatch, topic } = React.useContext(storeCTX);
+  const { allChats, dispatch, topic } = React.useContext(storeCTX);
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
+  const user = Cookies.get("user");
+  const scrollRef = React.useRef(null);
 
+  const scrollView = () => {
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  React.useEffect(scrollView, [allChats]);
+
+  React.useEffect(scrollView);
+
+  //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
-    fetch(`http://localhost:5000/api/getChats/${topic.id}`, {
-      credentials: "include"
-    })
+    fetch(
+      `http://localhost:5000/api/getChats/${window.localStorage.getItem(
+        "topic"
+      )}`,
+      {
+        credentials: "include"
+      }
+    )
       .then(res => res.json())
       .then(result => {
         if (result.code === 200) {
@@ -70,11 +96,10 @@ const ChatRooms = () => {
 
   let chats;
 
-  //TODO try setting different list style for current user like whatsapp
   if (loggedInStatus) {
     chats = (
       <React.Fragment>
-        <List className={classes.chatContainer}>
+        <List className={classes.chatContainer} id="chatContainer">
           {Object.keys(allChats).map(key => {
             if (user === allChats[key].sender) {
               return (
@@ -90,7 +115,15 @@ const ChatRooms = () => {
                 <ListItem className={classes.chatItems} key={allChats[key].id}>
                   <ListItemText
                     primary={
-                      `${allChats[key].sender}` + ` : ` + `${allChats[key].msg}`
+                      <React.Fragment>
+                        <Typography
+                          className={classes.senderName}
+                          component="span"
+                        >
+                          {`${allChats[key].sender}` + ` : `}
+                        </Typography>
+                        <Typography component="span">{`${allChats[key].msg}`}</Typography>
+                      </React.Fragment>
                     }
                   />
                 </ListItem>
@@ -109,20 +142,12 @@ const ChatRooms = () => {
       <Layout>
         <Paper square className={classes.paper}>
           {chats}
+          <div ref={scrollRef} />
+          <Textbox />
         </Paper>
       </Layout>
-      <Textbox />
     </React.Fragment>
   );
 };
-
-// ChatRooms.getInitialProps = async function() {
-//   const { topic } = React.useContext(storeCTX);
-//   const res = await fetch(`http://localhost:5000/api/getChats/${topic.id}`, {
-//     credentials: "include"
-//   });
-//   const result = await res.json();
-//   console.log(result);
-// };
 
 export default ChatRooms;

@@ -10,14 +10,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import fetch from "isomorphic-unfetch";
 
-// const Rooms = props => (
-//   <li>
-//     <Link href="/p/[id]" as={`/p/${props.title}`}>
-//       <a>{props.title}</a>
-//     </Link>
-//   </li>
-// );
-
 const Home = () => {
   const { newLink, setTopic } = React.useContext(storeCTX);
 

@@ -65,6 +65,10 @@ const Header = props => {
             button
             key={key}
             onClick={() => {
+              window.localStorage.setItem(
+                "topic",
+                JSON.stringify(newLink[key].id)
+              );
               setTopic(newLink[key]);
               setMobileOpen(!mobileOpen);
             }}
@@ -74,12 +78,12 @@ const Header = props => {
             </Link>
           </ListItem>
         ))}
-        <ListItem button>
+        <ListItem button onClick={() => setTopic("")}>
           <Link href="/signin">
             <ListItemText primary={"#" + "signin"} />
           </Link>
         </ListItem>
-        <ListItem button>
+        <ListItem button onClick={() => setTopic("")}>
           <Link href="/signup">
             <ListItemText primary={"#" + "signup"} />
           </Link>
@@ -87,9 +91,10 @@ const Header = props => {
       </List>
     </div>
   );
+
   return (
     <div className={classes.root}>
-      <AppBar position="sticky" className={classes.color}>
+      <AppBar position="fixed" className={classes.color}>
         <Toolbar>
           <IconButton
             edge="start"
