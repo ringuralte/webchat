@@ -8,7 +8,6 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
 import fetch from "isomorphic-unfetch";
 
-import { storeCTX } from "../components/Store";
 import Errorbox from "../components/Errorbox";
 
 const useStyles = makeStyles(theme =>
@@ -29,6 +28,9 @@ const useStyles = makeStyles(theme =>
     },
     submit: {
       margin: theme.spacing(3, 0, 2)
+    },
+    container: {
+      paddingTop: "8vh"
     }
   })
 );
@@ -38,8 +40,10 @@ const SignUp = () => {
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
-
-  const { error, setError } = React.useContext(storeCTX);
+  const [error, setError] = React.useState({
+    msg: "",
+    display: false
+  });
 
   const signUp = e => {
     e.preventDefault();
@@ -55,14 +59,14 @@ const SignUp = () => {
         .then(res => res.json())
         .then(response => {
           if (response.code === 400) {
-            setError(response.msg);
+            setError({ msg: response.msg, display: true });
           } else if (response.code === 200) {
             Router.push("/");
           }
         })
         .catch(err => alert(err.message));
     } else {
-      setError("Password does not match");
+      setError({ msg: "Passwords does not match", display: true });
     }
     setUserName("");
     setPassword("");
@@ -71,7 +75,7 @@ const SignUp = () => {
 
   return (
     <Layout>
-      <Container component="main" maxWidth="xs">
+      <Container className={classes.container} component="main" maxWidth="xs">
         <Errorbox error={error} />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">

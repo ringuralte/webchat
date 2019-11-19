@@ -21,6 +21,15 @@ function reducer(state, action) {
   }
 }
 
+// function topicReducer(state, action) {
+//   switch (action.type) {
+//     case "CHANGE TOPIC":
+//       return action.payload;
+//     default:
+//       return state;
+//   }
+// }
+
 function sendChatAction(value) {
   socket.emit("chat message", value);
 }
@@ -29,8 +38,8 @@ const Store = props => {
   const [newLink, setNewLink] = React.useState({});
   const [allChats, dispatch] = React.useReducer(reducer, initState);
   const [user, setUser] = React.useState("");
-  const [error, setError] = React.useState("");
 
+  // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
   //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
   const [topic, setTopic] = React.useState("");
@@ -38,8 +47,8 @@ const Store = props => {
   React.useEffect(() => {
     fetch("http://localhost:5000/api/topics", { credentials: "include" })
       .then(res => res.json())
-      .then(result => {
-        setNewLink(result.rows);
+      .then(json => {
+        setNewLink(json.rows);
       });
   }, []);
 
@@ -59,9 +68,8 @@ const Store = props => {
         user,
         setUser,
         topic,
-        setTopic,
-        error,
-        setError
+        setTopic
+        // dispatchTopic
       }}
     >
       {props.children}

@@ -54,13 +54,13 @@ const Textbox = () => {
       })
     })
       .then(res => res.json())
-      .then(chat => {
-        if (chat.code === 401) {
-          alert(chat.message);
+      .then(json => {
+        if (json.code === 401) {
+          alert(json.message);
           changeTextValue("");
         } else {
           sendChatAction({
-            id: chat.id,
+            id: json.id,
             sender: Cookies.get("user"),
             msg: textValue
           });

@@ -11,7 +11,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const Layout = (props) => {
+const Layout = props => {
   const classes = useStyles();
   return (
     <div className={classes.root}>

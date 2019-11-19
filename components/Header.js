@@ -20,9 +20,11 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      display: "flex",
       margin: 0,
-      padding: 0
+      padding: 0,
+      minHeight: "7vh",
+      background: "#292d3e",
+      width: "100vw"
     },
     drawer: {
       [theme.breakpoints.up("sm")]: {
@@ -30,7 +32,8 @@ const useStyles = makeStyles(theme =>
         flexShrink: 0
       }
     },
-    color: {
+    appBar: {
+      width: "100%",
       backgroundColor: "#282828"
     },
     menuButton: {
@@ -48,7 +51,7 @@ const useStyles = makeStyles(theme =>
 const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { newLink, topic, setTopic } = React.useContext(storeCTX);
+  const { newLink, topic, setTopic} = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   // const [topic, setTopic] = React.useState("");
 
@@ -69,6 +72,11 @@ const Header = props => {
                 "topic",
                 JSON.stringify(newLink[key].id)
               );
+              window.localStorage.setItem(
+                "title",
+                JSON.stringify(newLink[key].title)
+              )
+              // dispatchTopic({ type: "CHANGE TOPIC", payload: newLink[key]})
               setTopic(newLink[key]);
               setMobileOpen(!mobileOpen);
             }}
@@ -93,42 +101,44 @@ const Header = props => {
   );
 
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed" className={classes.color}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            aria-label="menu"
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h5" className={classes.title}>
-            Chat App
-          </Typography>
-          <Typography variant="subtitle2">{topic.title}</Typography>
-        </Toolbar>
-      </AppBar>
-      <nav aria-label="drawer" className={classes.drawer}>
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            ModalProps={{
-              keepMounted: true
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-    </div>
+    <>
+      <div className={classes.root}>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h5" className={classes.title}>
+              Chat App
+            </Typography>
+            <Typography variant="subtitle2">{topic.title}</Typography>
+          </Toolbar>
+        </AppBar>
+        <nav aria-label="drawer" className={classes.drawer}>
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              ModalProps={{
+                keepMounted: true
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+      </div>
+    </>
   );
 };
 

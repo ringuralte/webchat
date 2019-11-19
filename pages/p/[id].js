@@ -7,7 +7,6 @@ import { storeCTX } from "../../components/Store";
 
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
-import ScrollToBottom from "react-scroll-to-bottom";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -46,8 +45,7 @@ const useStyles = makeStyles(theme =>
       color: "#f07178"
     },
     paper: {
-      paddingBottom: 50,
-      paddingTop: 100
+      paddingBottom: 50
     },
     chat: {
       flexGrow: 1
@@ -60,18 +58,38 @@ const useStyles = makeStyles(theme =>
 
 const ChatRooms = () => {
   const classes = useStyles();
-  const { allChats, dispatch, topic } = React.useContext(storeCTX);
+  const { allChats, dispatch, topic, setTopic} = React.useContext(storeCTX);
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
   const user = Cookies.get("user");
   const scrollRef = React.useRef(null);
+  // const [ checkLength, setCheckLength ] = React.useState("")
 
-  const scrollView = () => {
+  //!TODO the pages load to scroll bottom even when there is not enough
+  //chat items and since the container have min-height of 100vh
+  // const chatListLength = allChats.length;
+
+  const scrollViewOnSend = () => {
+    //not a very good implementation but don't want to list bottom
+    //messages if the length of allChats is too short.
+    // console.log(chatListLength);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  React.useEffect(scrollView, [allChats]);
+  const scrollViewOnLoad = () => {
+    // setCheckLength(allChats.length)
 
-  React.useEffect(scrollView);
+    // setCheckLength(allChats.length);
+    // console.log(setCheckLength)
+    // if(setCheckLength > 10) {
+      scrollRef.current.scrollIntoView();
+    // }
+  };
+
+  //when component mounts
+  React.useEffect(scrollViewOnLoad);
+
+  //when component is updated
+  React.useEffect(scrollViewOnSend, [allChats]);
 
   //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
@@ -87,8 +105,10 @@ const ChatRooms = () => {
       .then(result => {
         if (result.code === 200) {
           dispatch({ type: "FETCH MESSAGE", payload: result.rows });
+          setTopic(JSON.parse(window.localStorage.getItem("title")))
           setLoggedInStatus(true);
         } else {
+          setTopic("")
           Router.push("/signin");
         }
       });
@@ -99,7 +119,7 @@ const ChatRooms = () => {
   if (loggedInStatus) {
     chats = (
       <React.Fragment>
-        <List className={classes.chatContainer} id="chatContainer">
+        <List className={classes.chatContainer}>
           {Object.keys(allChats).map(key => {
             if (user === allChats[key].sender) {
               return (
