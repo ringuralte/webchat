@@ -6,7 +6,7 @@ const useStyles = makeStyles(() =>
     root: {
       display: "flex",
       flexDirection: "column",
-      minHeight: "100vh"
+      height: "100vh"
     }
   })
 );

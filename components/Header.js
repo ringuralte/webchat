@@ -1,5 +1,9 @@
 import React from "react";
+import Router from "next/router"
 import Link from "next/link";
+import Cookies from "js-cookie";
+import fetch from "isomorphic-unfetch"
+
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Divider from "@material-ui/core/Divider";
@@ -12,6 +16,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import ExitToApp from "@material-ui/icons/ExitToApp";
 
 import { storeCTX } from "./Store";
 
@@ -23,8 +29,7 @@ const useStyles = makeStyles(theme =>
       margin: 0,
       padding: 0,
       minHeight: "7vh",
-      background: "#292d3e",
-      width: "100vw"
+      background: "#292d3e"
     },
     drawer: {
       [theme.breakpoints.up("sm")]: {
@@ -33,7 +38,7 @@ const useStyles = makeStyles(theme =>
       }
     },
     appBar: {
-      width: "100%",
+      width: "100vw",
       backgroundColor: "#282828"
     },
     menuButton: {
@@ -44,6 +49,22 @@ const useStyles = makeStyles(theme =>
     },
     title: {
       flexGrow: 1
+    },
+    topDrawer: {
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "15px 5px 15px 5px"
+    },
+    user: {
+      display: "flex"
+    },
+    iconColor: {
+      color: "limegreen"
+    },
+    signOut: {
+      display: "flex",
+      border: 0,
+      backgroundColor: "inherit"
     }
   })
 );
@@ -51,41 +72,63 @@ const useStyles = makeStyles(theme =>
 const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { newLink, topic, setTopic} = React.useContext(storeCTX);
+  const { newLink, topic, setTopic } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  // const [topic, setTopic] = React.useState("");
+  const user = Cookies.get("user");
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
+  const signOut = e => {
+    e.preventDefault();
+    fetch("http://localhost:5000/api/signOut", {
+      method: "get",
+      credentials: "include",
+    }).then(Router.push('/signin'))
+  }
+
+  //only show topics and top drawer if user is logged in
+  let topDrawer;
+  let topics;
+
+  if (user) {
+    topDrawer = (
+      <div className={classes.topDrawer}>
+        <span className={classes.user}>
+          <AccountCircle className={classes.iconColor} />
+          {user}
+        </span>
+        <button className={classes.signOut} onClick={signOut}>
+          Sign Out <ExitToApp />
+        </button>
+      </div>
+    );
+  }
+
+  if (user) {
+    topics = Object.keys(newLink).map(key => (
+      <ListItem
+        button
+        key={key}
+        onClick={() => {
+          window.localStorage.setItem("topic", JSON.stringify(newLink[key].id));
+          setTopic(newLink[key]);
+          setMobileOpen(!mobileOpen);
+        }}
+      >
+        <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
+          <ListItemText primary={"#" + newLink[key].title} />
+        </Link>
+      </ListItem>
+    ));
+  }
 
   const drawer = (
     <div>
+      {topDrawer}
       <Divider />
       <List>
-        {Object.keys(newLink).map(key => (
-          <ListItem
-            button
-            key={key}
-            onClick={() => {
-              window.localStorage.setItem(
-                "topic",
-                JSON.stringify(newLink[key].id)
-              );
-              window.localStorage.setItem(
-                "title",
-                JSON.stringify(newLink[key].title)
-              )
-              // dispatchTopic({ type: "CHANGE TOPIC", payload: newLink[key]})
-              setTopic(newLink[key]);
-              setMobileOpen(!mobileOpen);
-            }}
-          >
-            <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
-              <ListItemText primary={"#" + newLink[key].title} />
-            </Link>
-          </ListItem>
-        ))}
+        {topics}
         <ListItem button onClick={() => setTopic("")}>
           <Link href="/signin">
             <ListItemText primary={"#" + "signin"} />

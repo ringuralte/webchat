@@ -5,26 +5,36 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import { storeCTX } from "../components/Store";
 
+import Container from "@material-ui/core/Container"
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-
-import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import fetch from "isomorphic-unfetch";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    container: {
-      paddingTop: "8vh",
+    root: {
+      width: "100vw",
+      position: "relative",
       minHeight: "100vh"
-    }
+    },
+    main: {
+      [theme.breakpoints.down("sm")]: {
+        marginTop: theme.spacing(2)
+      },
+      marginTop: theme.spacing(8),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
   })
 );
 
 const Home = () => {
   const classes = useStyles();
-  const { newLink, setTopic} = React.useContext(storeCTX);
+  const { newLink, setTopic } = React.useContext(storeCTX);
 
   React.useEffect(() => {
     fetch("http://localhost:5000/checkToken", { credentials: "include" })
@@ -35,10 +45,13 @@ const Home = () => {
   }, []);
 
   return (
-    <React.Fragment>
-      <Layout>
-        <Paper square>
-          <List className={classes.container}>
+    <Layout>
+      <div className={classes.root}>
+        <Container className={classes.main} component="main" maxWidth="xs">
+          <Typography className={classes.title} component="h1" variant="h5">
+            Just Another Chat App
+          </Typography>
+          <List>
             {Object.keys(newLink).map(key => (
               <ListItem
                 button
@@ -49,11 +62,6 @@ const Home = () => {
                     "topic",
                     JSON.stringify(newLink[key].id)
                   );
-                  window.localStorage.setItem(
-                    "title",
-                    JSON.stringify(newLink[key].title)
-                  );
-                  // dispatchTopic({type: "CHANGE TOPIC", payload: newLink[key]})
                   setTopic(newLink[key]);
                 }}
               >
@@ -63,9 +71,9 @@ const Home = () => {
               </ListItem>
             ))}
           </List>
-        </Paper>
-      </Layout>
-    </React.Fragment>
+        </Container>{" "}
+      </div>
+    </Layout>
   );
 };
 

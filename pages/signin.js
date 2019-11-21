@@ -2,12 +2,11 @@
 
 import React from "react";
 import Router from "next/router";
-import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import {createStyles, makeStyles} from "@material-ui/core/styles";
 import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 
@@ -19,8 +18,8 @@ const useStyles = makeStyles(theme =>
     root: {
       width: "100vw",
       position: "relative",
-      background: "linear-gradient(135deg, #eeffff, #00bbee)",
-      height: "80vh"
+      background: "linear-gradient(135deg, #eeffff, #00bbcc)",
+      height: "100vh"
     },
     main: {
       [theme.breakpoints.down("sm")]: {
@@ -44,26 +43,26 @@ const useStyles = makeStyles(theme =>
     },
     linkStyle: {
       textDecoration: "none",
-      color: "#eeffff"
     },
-    container: {},
+    container: {
+      paddingTop: "8vh"
+    },
     curve: {
       position: "absolute",
       bottom: 0,
       width: "100%"
     },
+    curve2: {
+      position: "absolute",
+      bottom: 10,
+      width: "100%"
+    },
     path: {
-      fill: "#0ff"
+      fill: "#0ff",
+    },
+    path2: {
+      fill: "#0bf"
     }
-    // notchedOutline: {
-    //   borderWidth: "1px",
-    //   borderColor: "white"
-    // },
-    // focused: {
-    //   "&notchedOutline": {
-    //     borderColor: "white"
-    //   }
-    // }
   })
 );
 
@@ -81,7 +80,7 @@ const SignIn = () => {
     e.preventDefault();
     fetch("http://localhost:5000/api/signIn", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       credentials: "include",
       body: JSON.stringify({
         user: userName,
@@ -95,7 +94,7 @@ const SignIn = () => {
           setPassword("");
           Router.push("/");
         } else {
-          setError({ msg: response.msg, display: true });
+          setError({msg: response.msg, display: true});
         }
       })
       .catch(err => alert(err));
@@ -105,7 +104,7 @@ const SignIn = () => {
     <Layout>
       <div className={classes.root}>
         <Container className={classes.container} component="main" maxWidth="xs">
-          <Errorbox error={error} />
+          <Errorbox error={error}/>
           <div className={classes.main}>
             <Typography className={classes.title} component="h1" variant="h5">
               Sign In
@@ -115,11 +114,6 @@ const SignIn = () => {
                 variant="outlined"
                 margin="normal"
                 required
-                // InputProps={{
-                //   classes: {
-                //     notchedOutline: classes.notchedOutline
-                //   }
-                // }}
                 fullWidth
                 id="user"
                 label="User Name"
@@ -159,6 +153,10 @@ const SignIn = () => {
             </Typography>
           </div>
         </Container>
+        <svg className={classes.curve2} viewBox="0 0 2391 378" xmlns="http://www.w3.org/2000/svg">
+          <path className={classes.path2}
+                d="M343.937 124.55C165.147 -23.9495 40.8167 206.775 1 340.7V377L2390 366.275V296.15C2336.7 213.1 2205.05 45.1854 2104.86 37.9254C1979.63 28.8505 1817.8 98.9754 1698.35 218.6C1578.9 338.225 1336.14 304.4 1334.22 304.4C1189.72 318.425 1191.65 118.775 1025.96 18.1255C860.269 -82.5244 779.352 292.85 742.746 304.4C706.14 315.95 538.525 306.05 343.937 124.55Z"/>
+        </svg>
         <svg className={classes.curve} viewBox="0 0 1416.99 174.01">
           <path
             className={classes.path}

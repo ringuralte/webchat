@@ -7,7 +7,6 @@ import { storeCTX } from "../../components/Store";
 
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
-import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -21,13 +20,14 @@ const useStyles = makeStyles(theme =>
     root: {
       display: "flex",
       flexDirection: "column",
-      flexGrow: 1
+      flexGrow: 1,
+      paddingBottom: 50,
     },
     chatContainer: {
       padding: "1rem",
       display: "flex",
       flexDirection: "column",
-      minHeight: "90vh",
+      minHeight: "85vh",
       background: "#292d3e"
     },
     chatItems: {
@@ -44,9 +44,6 @@ const useStyles = makeStyles(theme =>
     senderName: {
       color: "#f07178"
     },
-    paper: {
-      paddingBottom: 50
-    },
     chat: {
       flexGrow: 1
     },
@@ -62,27 +59,16 @@ const ChatRooms = () => {
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
   const user = Cookies.get("user");
   const scrollRef = React.useRef(null);
-  // const [ checkLength, setCheckLength ] = React.useState("")
 
   //!TODO the pages load to scroll bottom even when there is not enough
   //chat items and since the container have min-height of 100vh
-  // const chatListLength = allChats.length;
 
   const scrollViewOnSend = () => {
-    //not a very good implementation but don't want to list bottom
-    //messages if the length of allChats is too short.
-    // console.log(chatListLength);
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current.scrollIntoView();
   };
 
   const scrollViewOnLoad = () => {
-    // setCheckLength(allChats.length)
-
-    // setCheckLength(allChats.length);
-    // console.log(setCheckLength)
-    // if(setCheckLength > 10) {
-      scrollRef.current.scrollIntoView();
-    // }
+    scrollRef.current.scrollIntoView();
   };
 
   //when component mounts
@@ -105,7 +91,6 @@ const ChatRooms = () => {
       .then(result => {
         if (result.code === 200) {
           dispatch({ type: "FETCH MESSAGE", payload: result.rows });
-          setTopic(JSON.parse(window.localStorage.getItem("title")))
           setLoggedInStatus(true);
         } else {
           setTopic("")
@@ -118,6 +103,7 @@ const ChatRooms = () => {
 
   if (loggedInStatus) {
     chats = (
+      // user chats goes right aligned
       <React.Fragment>
         <List className={classes.chatContainer}>
           {Object.keys(allChats).map(key => {
@@ -131,6 +117,7 @@ const ChatRooms = () => {
                 </ListItem>
               );
             } else {
+              // other users appear on left
               return (
                 <ListItem className={classes.chatItems} key={allChats[key].id}>
                   <ListItemText
@@ -154,17 +141,18 @@ const ChatRooms = () => {
       </React.Fragment>
     );
   } else {
-    chats = <div></div>;
+    chats = <div className={classes.chatContainer} />;
   }
 
   return (
     <React.Fragment>
       <Layout>
-        <Paper square className={classes.paper}>
+        <div className={classes.root}>
           {chats}
+          {/* ref is for auto scroll to bottom for send and load */}
           <div ref={scrollRef} />
           <Textbox />
-        </Paper>
+        </div>
       </Layout>
     </React.Fragment>
   );
