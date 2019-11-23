@@ -73,7 +73,7 @@ const SignUp = () => {
   const signUp = e => {
     e.preventDefault();
     if (password === confirmPassword) {
-      fetch("http://localhost:5000/api/signUp", {
+      fetch("/api/signUp", {
         method: "POST",
         body: JSON.stringify({
           user: userName,

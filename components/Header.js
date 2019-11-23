@@ -87,7 +87,7 @@ const Header = props => {
 
   const signOut = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signOut", {
+    fetch("api/signOut", {
       method: "get",
       credentials: "include"
     })

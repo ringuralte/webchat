@@ -44,7 +44,7 @@ const Textbox = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/postChat", {
+    fetch("/api/postChat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

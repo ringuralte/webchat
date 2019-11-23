@@ -78,7 +78,7 @@ const SignIn = () => {
 
   const signIn = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signIn", {
+    fetch("/api/signIn", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       credentials: "include",
