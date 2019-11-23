@@ -8,6 +8,7 @@ let socket;
 const initState = {};
 
 function reducer(state, action) {
+  //might not be the right way for react
   const prevState = { ...state };
   const length = Object.keys(prevState).length;
   prevState[length + 1] = action.payload;
@@ -20,15 +21,6 @@ function reducer(state, action) {
       return state;
   }
 }
-
-// function topicReducer(state, action) {
-//   switch (action.type) {
-//     case "CHANGE TOPIC":
-//       return action.payload;
-//     default:
-//       return state;
-//   }
-// }
 
 function sendChatAction(value) {
   socket.emit("chat message", value);
@@ -48,7 +40,9 @@ const Store = props => {
     fetch("http://localhost:5000/api/topics", { credentials: "include" })
       .then(res => res.json())
       .then(json => {
-        setNewLink(json.rows);
+        if(json.code === 200) {
+          setNewLink(json.topics);
+        }
       });
   }, []);
 

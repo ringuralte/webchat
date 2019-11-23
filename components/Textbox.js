@@ -56,7 +56,7 @@ const Textbox = () => {
       .then(res => res.json())
       .then(json => {
         if (json.code === 401) {
-          alert(json.message);
+          alert('error ' + json.message);
           changeTextValue("");
         } else {
           sendChatAction({
@@ -67,7 +67,7 @@ const Textbox = () => {
           changeTextValue("");
         }
       })
-      .catch(err => alert(err.message));
+      .catch(err => alert('error ' + err.message));
   };
 
   return (

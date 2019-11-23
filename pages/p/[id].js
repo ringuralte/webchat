@@ -88,9 +88,9 @@ const ChatRooms = () => {
       }
     )
       .then(res => res.json())
-      .then(result => {
-        if (result.code === 200) {
-          dispatch({ type: "FETCH MESSAGE", payload: result.rows });
+      .then(json=> {
+        if (json.code === 200) {
+          dispatch({ type: "FETCH MESSAGE", payload: json.chats});
           setLoggedInStatus(true);
         } else {
           setTopic("")

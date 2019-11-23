@@ -44,6 +44,10 @@ const Home = () => {
       });
   }, []);
 
+  React.useEffect(() => {
+    setTopic("")
+  }, [])
+
   return (
     <Layout>
       <div className={classes.root}>
@@ -60,9 +64,8 @@ const Home = () => {
                   //for the useEffect fetch on [id].js
                   window.localStorage.setItem(
                     "topic",
-                    JSON.stringify(newLink[key].id)
+                    JSON.stringify(newLink[key].title)
                   );
-                  setTopic(newLink[key]);
                 }}
               >
                 <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>

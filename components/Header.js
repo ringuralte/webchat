@@ -1,8 +1,8 @@
 import React from "react";
-import Router from "next/router"
+import Router from "next/router";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import fetch from "isomorphic-unfetch"
+import fetch from "isomorphic-unfetch";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -76,16 +76,27 @@ const Header = props => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const user = Cookies.get("user");
 
+  // so that topic state will be preserved on refresh
+  React.useEffect(() => {
+    setTopic({ title: JSON.parse(window.localStorage.getItem("topic")) });
+  }, []);
+
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
+
   const signOut = e => {
     e.preventDefault();
     fetch("http://localhost:5000/api/signOut", {
       method: "get",
-      credentials: "include",
-    }).then(Router.push('/signin'))
-  }
+      credentials: "include"
+    })
+      .then(() => {
+        window.localStorage.removeItem("topic");
+        setTopic("")
+      })
+      .then(Router.push("/signin"));
+  };
 
   //only show topics and top drawer if user is logged in
   let topDrawer;
@@ -111,7 +122,10 @@ const Header = props => {
         button
         key={key}
         onClick={() => {
-          window.localStorage.setItem("topic", JSON.stringify(newLink[key].id));
+          window.localStorage.setItem(
+            "topic",
+            JSON.stringify(newLink[key].title)
+          );
           setTopic(newLink[key]);
           setMobileOpen(!mobileOpen);
         }}
