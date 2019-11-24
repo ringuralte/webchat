@@ -47,7 +47,7 @@ const Store = props => {
   }, []);
 
   if (!socket) {
-    socket = io(":3001");
+    socket = io(":5000");
     socket.on("chat message", function(msg) {
       dispatch({ type: "RECEIVE MESSAGE", payload: msg });
     });

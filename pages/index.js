@@ -37,7 +37,7 @@ const Home = () => {
   const { newLink, setTopic } = React.useContext(storeCTX);
 
   React.useEffect(() => {
-    fetch("api/checkToken", { credentials: "include" })
+    fetch("/api/checkToken", { credentials: "include" })
       .then(res => res.json())
       .then(result => {
         if (result.code !== 200) Router.push("/signin");
