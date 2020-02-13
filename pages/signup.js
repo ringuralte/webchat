@@ -81,7 +81,7 @@ const SignUp = () => {
       //   }),
       //   headers: { "Content-Type": "application/json" }
       // })
-      fetch("https://https://fast-oasis-98847.herokuapp.com/api/signUp", {
+      fetch("https://fast-oasis-98847.herokuapp.com/api/signUp", {
         method: "POST",
         body: JSON.stringify({
           user: userName,

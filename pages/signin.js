@@ -87,7 +87,7 @@ const SignIn = () => {
     //     password: password
     //   })
     // })
-    fetch("http://https://fast-oasis-98847.herokuapp.com/api/signIn", {
+    fetch("https://fast-oasis-98847.herokuapp.com/api/signIn", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -53,7 +53,7 @@ const Textbox = () => {
     //     msg: textValue
     //   })
     // })
-    fetch("http://https://fast-oasis-98847.herokuapp.com/api/postChat", {
+    fetch("https://fast-oasis-98847.herokuapp.com/api/postChat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -61,6 +61,7 @@ const Textbox = () => {
         topic: window.localStorage.getItem("topic"),
         msg: textValue
       })
+    })
       .then(res => res.json())
       .then(json => {
         if (json.code === 401) {

@@ -88,7 +88,7 @@ const ChatRooms = () => {
     //   }
     // )
     fetch(
-      `https://https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
+      `https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
         "topic"
       )}`,
       {
