@@ -55,11 +55,10 @@ const useStyles = makeStyles(theme =>
 
 const ChatRooms = () => {
   const classes = useStyles();
-  const { allChats, dispatch, topic, setTopic, user } = React.useContext(
-    storeCTX
-  );
+  const { allChats, dispatch, topic, setTopic } = React.useContext(storeCTX);
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
   // const user = Cookies.get("user");
+  const user = window.localStorage.getItem("user");
   const scrollRef = React.useRef(null);
   console.log(user);
 

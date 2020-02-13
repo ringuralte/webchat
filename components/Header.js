@@ -1,7 +1,7 @@
 import React from "react";
 import Router from "next/router";
 import Link from "next/link";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import fetch from "isomorphic-unfetch";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
@@ -72,9 +72,10 @@ const useStyles = makeStyles(theme =>
 const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { newLink, topic, setTopic, user } = React.useContext(storeCTX);
+  const { newLink, topic, setTopic } = React.useContext(storeCTX);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   // const user = Cookies.get("user");
+  const user = window.localStorage.getItem("user");
 
   // so that topic state will be preserved on refresh
   React.useEffect(() => {

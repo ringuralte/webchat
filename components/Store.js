@@ -29,7 +29,7 @@ function sendChatAction(value) {
 const Store = props => {
   const [newLink, setNewLink] = React.useState({});
   const [allChats, dispatch] = React.useReducer(reducer, initState);
-  const [user, setUser] = React.useState("");
+  // const [user, setUser] = React.useState("");
 
   // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
   //topic should not be confused with newLink, newLink fetches data from server
@@ -63,8 +63,8 @@ const Store = props => {
         dispatch,
         sendChatAction,
         newLink,
-        user,
-        setUser,
+        // user,
+        // setUser,
         topic,
         setTopic
         // dispatchTopic

@@ -33,7 +33,8 @@ const useStyles = makeStyles(() =>
 
 const Textbox = () => {
   const classes = useStyles();
-  const { sendChatAction, user } = React.useContext(storeCTX);
+  const { sendChatAction } = React.useContext(storeCTX);
+  const user = window.localStorage.getItem("user");
 
   const enterKeyPress = e => {
     if (e.keyCode == 13) {
