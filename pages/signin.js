@@ -9,6 +9,7 @@ import Container from "@material-ui/core/Container";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import fetch from "isomorphic-unfetch";
+import Cookies from "js-cookie";
 
 import Layout from "../components/Layout";
 import Errorbox from "../components/Errorbox";
@@ -70,6 +71,7 @@ const SignIn = () => {
   const classes = useStyles();
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const { setUser } = React.useContext(storeCTX);
 
   const [error, setError] = React.useState({
     msg: "",
@@ -101,6 +103,7 @@ const SignIn = () => {
         if (response.code === 200) {
           setUserName("");
           setPassword("");
+          setUser(Cookies.get("user"));
           Router.push("/");
         } else {
           setError({ msg: response.msg, display: true });

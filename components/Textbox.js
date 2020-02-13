@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import ToolBar from "@material-ui/core/Toolbar";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 import { storeCTX } from "../components/Store";
 
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() =>
 
 const Textbox = () => {
   const classes = useStyles();
-  const { sendChatAction } = React.useContext(storeCTX);
+  const { sendChatAction, user } = React.useContext(storeCTX);
 
   const enterKeyPress = e => {
     if (e.keyCode == 13) {
@@ -70,7 +70,7 @@ const Textbox = () => {
         } else {
           sendChatAction({
             id: json.id,
-            sender: Cookies.get("user"),
+            sender: user,
             msg: textValue
           });
           changeTextValue("");
