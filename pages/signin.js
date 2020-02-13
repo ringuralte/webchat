@@ -11,7 +11,7 @@ import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import Cookies from "js-cookie";
 
-import { storeCTX } from "./Store";
+import { storeCTX } from "../components/Store";
 
 import Layout from "../components/Layout";
 import Errorbox from "../components/Errorbox";
