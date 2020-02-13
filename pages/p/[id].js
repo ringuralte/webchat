@@ -59,6 +59,7 @@ const ChatRooms = () => {
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
   const user = Cookies.get("user");
   const scrollRef = React.useRef(null);
+  console.log(user);
 
   //!TODO the pages load to scroll bottom even when there is not enough
   //chat items and since the container have min-height of 100vh
@@ -109,6 +110,7 @@ const ChatRooms = () => {
 
   let chats;
 
+  //check if user otherwise blank page
   if (loggedInStatus) {
     chats = (
       // user chats goes right aligned
