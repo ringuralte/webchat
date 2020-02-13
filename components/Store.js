@@ -50,7 +50,7 @@ const Store = props => {
   }, []);
 
   if (!socket) {
-    socket = io(":5000");
+    socket = io("https://fast-oasis-98847.herokuapp.com");
     socket.on("chat message", function(msg) {
       console.log(msg);
       dispatch({ type: "RECEIVE MESSAGE", payload: msg });
