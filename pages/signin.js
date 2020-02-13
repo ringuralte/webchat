@@ -105,6 +105,7 @@ const SignIn = () => {
           setUserName("");
           setPassword("");
           setUser(response.user);
+          window.localStorage.setItem("user", response.user);
           Router.push("/");
         } else {
           setError({ msg: response.msg, display: true });

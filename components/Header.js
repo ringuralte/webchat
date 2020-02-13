@@ -72,13 +72,16 @@ const useStyles = makeStyles(theme =>
 const Header = props => {
   const { container } = props;
   const classes = useStyles();
-  const { newLink, topic, setTopic, user } = React.useContext(storeCTX);
+  const { newLink, topic, setTopic, user, setUser } = React.useContext(
+    storeCTX
+  );
   const [mobileOpen, setMobileOpen] = React.useState(false);
   // const user = Cookies.get("user");
 
   // so that topic state will be preserved on refresh
   React.useEffect(() => {
     setTopic({ title: JSON.parse(window.localStorage.getItem("topic")) });
+    setUser(window.localStorage.getItem("user"));
   }, []);
 
   function handleDrawerToggle() {
