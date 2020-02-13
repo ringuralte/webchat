@@ -5,7 +5,7 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import { storeCTX } from "../components/Store";
 
-import Container from "@material-ui/core/Container"
+import Container from "@material-ui/core/Container";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center"
-    },
+    }
   })
 );
 
@@ -37,7 +37,7 @@ const Home = () => {
   const { newLink, setTopic } = React.useContext(storeCTX);
 
   React.useEffect(() => {
-    fetch("/api/checkToken", { credentials: "include" })
+    fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
       .then(res => res.json())
       .then(result => {
         if (result.code !== 200) Router.push("/signin");
@@ -45,8 +45,8 @@ const Home = () => {
   }, []);
 
   React.useEffect(() => {
-    setTopic("")
-  }, [])
+    setTopic("");
+  }, []);
 
   return (
     <Layout>

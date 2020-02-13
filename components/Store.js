@@ -37,10 +37,10 @@ const Store = props => {
   const [topic, setTopic] = React.useState("");
 
   React.useEffect(() => {
-    fetch("/api/topics", { credentials: "include" })
+    fetch("http://localhost:5000/api/topics", { credentials: "include" })
       .then(res => res.json())
       .then(json => {
-        if(json.code === 200) {
+        if (json.code === 200) {
           setNewLink(json.topics);
         }
       });
@@ -49,6 +49,7 @@ const Store = props => {
   if (!socket) {
     socket = io(":5000");
     socket.on("chat message", function(msg) {
+      console.log(msg);
       dispatch({ type: "RECEIVE MESSAGE", payload: msg });
     });
   }

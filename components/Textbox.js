@@ -44,7 +44,7 @@ const Textbox = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetch("/api/postChat", {
+    fetch("http://localhost:5000/api/postChat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -56,7 +56,7 @@ const Textbox = () => {
       .then(res => res.json())
       .then(json => {
         if (json.code === 401) {
-          alert('error ' + json.message);
+          alert("error " + json.message);
           changeTextValue("");
         } else {
           sendChatAction({
@@ -67,7 +67,7 @@ const Textbox = () => {
           changeTextValue("");
         }
       })
-      .catch(err => alert('error ' + err.message));
+      .catch(err => alert("error " + err.message));
   };
 
   return (

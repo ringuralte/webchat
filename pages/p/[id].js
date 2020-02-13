@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexDirection: "column",
       flexGrow: 1,
-      paddingBottom: 50,
+      paddingBottom: 50
     },
     chatContainer: {
       padding: "1rem",
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme =>
 
 const ChatRooms = () => {
   const classes = useStyles();
-  const { allChats, dispatch, topic, setTopic} = React.useContext(storeCTX);
+  const { allChats, dispatch, topic, setTopic } = React.useContext(storeCTX);
   const [loggedInStatus, setLoggedInStatus] = React.useState(false);
   const user = Cookies.get("user");
   const scrollRef = React.useRef(null);
@@ -80,7 +80,7 @@ const ChatRooms = () => {
   //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
     fetch(
-      `/api/getChats/${window.localStorage.getItem(
+      `http://localhost:5000/api/getChats/${window.localStorage.getItem(
         "topic"
       )}`,
       {
@@ -88,12 +88,12 @@ const ChatRooms = () => {
       }
     )
       .then(res => res.json())
-      .then(json=> {
+      .then(json => {
         if (json.code === 200) {
-          dispatch({ type: "FETCH MESSAGE", payload: json.chats});
+          dispatch({ type: "FETCH MESSAGE", payload: json.chats });
           setLoggedInStatus(true);
         } else {
-          setTopic("")
+          setTopic("");
           Router.push("/signin");
         }
       });

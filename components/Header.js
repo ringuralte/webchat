@@ -87,13 +87,13 @@ const Header = props => {
 
   const signOut = e => {
     e.preventDefault();
-    fetch("api/signOut", {
+    fetch("http://localhost:5000/api/signOut", {
       method: "get",
       credentials: "include"
     })
       .then(() => {
         window.localStorage.removeItem("topic");
-        setTopic("")
+        setTopic("");
       })
       .then(Router.push("/signin"));
   };
