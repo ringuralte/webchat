@@ -44,7 +44,16 @@ const Textbox = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/postChat", {
+    // fetch("http://localhost:5000/api/postChat", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   credentials: "include",
+    //   body: JSON.stringify({
+    //     topic: window.localStorage.getItem("topic"),
+    //     msg: textValue
+    //   })
+    // })
+    fetch("http://https://fast-oasis-98847.herokuapp.com/api/postChat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -52,7 +61,6 @@ const Textbox = () => {
         topic: window.localStorage.getItem("topic"),
         msg: textValue
       })
-    })
       .then(res => res.json())
       .then(json => {
         if (json.code === 401) {

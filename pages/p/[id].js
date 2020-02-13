@@ -79,8 +79,16 @@ const ChatRooms = () => {
 
   //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
+    // fetch(
+    //   `http://localhost:5000/api/getChats/${window.localStorage.getItem(
+    //     "topic"
+    //   )}`,
+    //   {
+    //     credentials: "include"
+    //   }
+    // )
     fetch(
-      `http://localhost:5000/api/getChats/${window.localStorage.getItem(
+      `https://https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
         "topic"
       )}`,
       {

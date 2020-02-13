@@ -37,7 +37,10 @@ const Home = () => {
   const { newLink, setTopic } = React.useContext(storeCTX);
 
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
+    // fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
+    fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(result => {
         if (result.code !== 200) Router.push("/signin");

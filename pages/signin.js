@@ -78,7 +78,16 @@ const SignIn = () => {
 
   const signIn = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signIn", {
+    // fetch("http://localhost:5000/api/signIn", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   credentials: "include",
+    //   body: JSON.stringify({
+    //     user: userName,
+    //     password: password
+    //   })
+    // })
+    fetch("http://https://fast-oasis-98847.herokuapp.com/api/signIn", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

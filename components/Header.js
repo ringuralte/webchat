@@ -87,7 +87,11 @@ const Header = props => {
 
   const signOut = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signOut", {
+    // fetch("http://localhost:5000/api/signOut", {
+    //   method: "get",
+    //   credentials: "include"
+    // })
+    fetch("https://fast-oasis-98847.herokuapp.com/api/signOut", {
       method: "get",
       credentials: "include"
     })

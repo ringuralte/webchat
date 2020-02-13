@@ -37,7 +37,10 @@ const Store = props => {
   const [topic, setTopic] = React.useState("");
 
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/topics", { credentials: "include" })
+    // fetch("http://localhost:5000/api/topics", { credentials: "include" })
+    fetch("https://fast-oasis-98847.herokuapp.com/api/topics", {
+      credentials: "include"
+    })
       .then(res => res.json())
       .then(json => {
         if (json.code === 200) {

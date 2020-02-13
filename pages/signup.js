@@ -73,7 +73,15 @@ const SignUp = () => {
   const signUp = e => {
     e.preventDefault();
     if (password === confirmPassword) {
-      fetch("http://localhost:5000/api/signUp", {
+      // fetch("http://localhost:5000/api/signUp", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     user: userName,
+      //     password: password
+      //   }),
+      //   headers: { "Content-Type": "application/json" }
+      // })
+      fetch("https://https://fast-oasis-98847.herokuapp.com/api/signUp", {
         method: "POST",
         body: JSON.stringify({
           user: userName,
