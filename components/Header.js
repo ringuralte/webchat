@@ -90,16 +90,17 @@ const Header = props => {
 
   const signOut = e => {
     e.preventDefault();
-    // fetch("http://localhost:5000/api/signOut", {
-    //   method: "get",
-    //   credentials: "include"
-    // })
-    fetch("https://fast-oasis-98847.herokuapp.com/api/signOut", {
+    fetch("http://localhost:5000/api/signOut", {
       method: "get",
       credentials: "include"
     })
+      // fetch("https://fast-oasis-98847.herokuapp.com/api/signOut", {
+      //   method: "get",
+      //   credentials: "include"
+      // })
       .then(() => {
         window.localStorage.removeItem("topic");
+        window.localStorage.removeItem("user");
         setTopic("");
       })
       .then(Router.push("/signin"));
@@ -150,12 +151,24 @@ const Header = props => {
       <Divider />
       <List>
         {topics}
-        <ListItem button onClick={() => setTopic("")}>
+        <ListItem
+          button
+          // onClick={() => {
+          //   // window.localStorage.removeItem("topic");
+          //   setTopic("");
+          // }}
+        >
           <Link href="/signin">
             <ListItemText primary={"#" + "signin"} />
           </Link>
         </ListItem>
-        <ListItem button onClick={() => setTopic("")}>
+        <ListItem
+          button
+          // onClick={() => {
+          //   // window.localStorage.removeItem("topic");
+          //   setTopic("");
+          // }}
+        >
           <Link href="/signup">
             <ListItemText primary={"#" + "signup"} />
           </Link>

@@ -72,25 +72,20 @@ const SignIn = () => {
   const classes = useStyles();
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { setUser } = React.useContext(storeCTX);
+  const { setUser, setTopic } = React.useContext(storeCTX);
 
   const [error, setError] = React.useState({
     msg: "",
     display: false
   });
 
+  React.useEffect(() => {
+    setTopic("");
+  });
+
   const signIn = e => {
     e.preventDefault();
-    // fetch("http://localhost:5000/api/signIn", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   credentials: "include",
-    //   body: JSON.stringify({
-    //     user: userName,
-    //     password: password
-    //   })
-    // })
-    fetch("https://fast-oasis-98847.herokuapp.com/api/signIn", {
+    fetch("http://localhost:5000/api/signIn", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -99,6 +94,15 @@ const SignIn = () => {
         password: password
       })
     })
+      // fetch("https://fast-oasis-98847.herokuapp.com/api/signIn", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   credentials: "include",
+      //   body: JSON.stringify({
+      //     user: userName,
+      //     password: password
+      //   })
+      // })
       .then(res => res.json())
       .then(response => {
         if (response.code === 200) {

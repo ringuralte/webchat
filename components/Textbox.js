@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import ToolBar from "@material-ui/core/Toolbar";
-// import Cookies from "js-cookie";
 
 import { storeCTX } from "../components/Store";
 
@@ -45,16 +44,8 @@ const Textbox = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // fetch("http://localhost:5000/api/postChat", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   credentials: "include",
-    //   body: JSON.stringify({
-    //     topic: window.localStorage.getItem("topic"),
-    //     msg: textValue
-    //   })
-    // })
-    fetch("https://fast-oasis-98847.herokuapp.com/api/postChat", {
+    //didn't include sender name in post request cause it uses cookie
+    fetch("http://localhost:5000/api/postChat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -63,6 +54,15 @@ const Textbox = () => {
         msg: textValue
       })
     })
+      // fetch("https://fast-oasis-98847.herokuapp.com/api/postChat", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   credentials: "include",
+      //   body: JSON.stringify({
+      //     topic: window.localStorage.getItem("topic"),
+      //     msg: textValue
+      //   })
+      // })
       .then(res => res.json())
       .then(json => {
         if (json.code === 401) {

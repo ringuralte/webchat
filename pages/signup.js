@@ -8,6 +8,8 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
 import fetch from "isomorphic-unfetch";
 
+import { storeCTX } from "../components/Store";
+
 import Errorbox from "../components/Errorbox";
 
 const useStyles = makeStyles(theme =>
@@ -70,18 +72,16 @@ const SignUp = () => {
     display: false
   });
 
+  const { setTopic } = React.useContext(storeCTX);
+
+  React.useEffect(() => {
+    setTopic("");
+  });
+
   const signUp = e => {
     e.preventDefault();
     if (password === confirmPassword) {
-      // fetch("http://localhost:5000/api/signUp", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     user: userName,
-      //     password: password
-      //   }),
-      //   headers: { "Content-Type": "application/json" }
-      // })
-      fetch("https://fast-oasis-98847.herokuapp.com/api/signUp", {
+      fetch("http://localhost:5000/api/signUp", {
         method: "POST",
         body: JSON.stringify({
           user: userName,
@@ -89,6 +89,14 @@ const SignUp = () => {
         }),
         headers: { "Content-Type": "application/json" }
       })
+        // fetch("https://fast-oasis-98847.herokuapp.com/api/signUp", {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     user: userName,
+        //     password: password
+        //   }),
+        //   headers: { "Content-Type": "application/json" }
+        // })
         .then(res => res.json())
         .then(response => {
           if (response.code === 400) {

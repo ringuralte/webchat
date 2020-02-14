@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme =>
     errorBox: {
       padding: 3,
       background: "rgba(244,67,54,0.2)",
-      border: "3px solid #f44336",
+      border: "2px solid #f44336",
       borderRadius: "5px",
       textAlign: "center"
     },

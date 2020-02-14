@@ -10,7 +10,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Cookies from "js-cookie";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import fetch from "isomorphic-unfetch";
 import { Typography } from "@material-ui/core";
@@ -49,6 +49,13 @@ const useStyles = makeStyles(theme =>
     },
     text: {
       padding: theme.spacing(2, 2, 0)
+    },
+    //!TODO cannot center at screen
+    progressCircle: {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      color: "white"
     }
   })
 );
@@ -58,11 +65,10 @@ const ChatRooms = () => {
   const { allChats, dispatch, topic, setTopic, user } = React.useContext(
     storeCTX
   );
-  const [loggedInStatus, setLoggedInStatus] = React.useState(false);
+  const [loader, setLoader] = React.useState(false);
   // const user = Cookies.get("user");
   // const user = window.localStorage.getItem("user");
   const scrollRef = React.useRef(null);
-  console.log(user);
 
   //!TODO the pages load to scroll bottom even when there is not enough
   //chat items and since the container have min-height of 100vh
@@ -83,27 +89,28 @@ const ChatRooms = () => {
 
   //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
-    // fetch(
-    //   `http://localhost:5000/api/getChats/${window.localStorage.getItem(
-    //     "topic"
-    //   )}`,
-    //   {
-    //     credentials: "include"
-    //   }
-    // )
+    setLoader(false);
     fetch(
-      `https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
+      `http://localhost:5000/api/getChats/${window.localStorage.getItem(
         "topic"
       )}`,
       {
         credentials: "include"
       }
     )
+      // fetch(
+      //   `https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
+      //     "topic"
+      //   )}`,
+      //   {
+      //     credentials: "include"
+      //   }
+      // )
       .then(res => res.json())
       .then(json => {
         if (json.code === 200) {
           dispatch({ type: "FETCH MESSAGE", payload: json.chats });
-          setLoggedInStatus(true);
+          setLoader(true);
         } else {
           setTopic("");
           Router.push("/signin");
@@ -114,7 +121,7 @@ const ChatRooms = () => {
   let chats;
 
   //check if user otherwise blank page
-  if (loggedInStatus) {
+  if (loader) {
     chats = (
       // user chats goes right aligned
       <React.Fragment>
@@ -154,7 +161,11 @@ const ChatRooms = () => {
       </React.Fragment>
     );
   } else {
-    chats = <div className={classes.chatContainer} />;
+    chats = (
+      <div className={classes.chatContainer}>
+        <CircularProgress className={classes.progressCircle} />
+      </div>
+    );
   }
 
   return (

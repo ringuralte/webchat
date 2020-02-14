@@ -1,7 +1,9 @@
+// TODO update header and home page on creating new group
 import React from "react";
 import Router from "next/router";
 import Link from "next/link";
 
+import CreateGroupDialog from "../components/CreateGroupDialog";
 import Layout from "../components/Layout";
 import { storeCTX } from "../components/Store";
 
@@ -37,10 +39,10 @@ const Home = () => {
   const { newLink, setTopic } = React.useContext(storeCTX);
 
   React.useEffect(() => {
-    // fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
-    fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
-      credentials: "include"
-    })
+    fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
+      // fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
+      //   credentials: "include"
+      // })
       .then(res => res.json())
       .then(result => {
         if (result.code !== 200) Router.push("/signin");
@@ -58,6 +60,7 @@ const Home = () => {
           <Typography className={classes.title} component="h1" variant="h5">
             Just Another Chat App
           </Typography>
+          <CreateGroupDialog />
           <List>
             {Object.keys(newLink).map(key => (
               <ListItem
