@@ -50,7 +50,6 @@ const useStyles = makeStyles(theme =>
     text: {
       padding: theme.spacing(2, 2, 0)
     },
-    //!TODO cannot center at screen
     progressCircle: {
       position: "fixed",
       top: "50%",

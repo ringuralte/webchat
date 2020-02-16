@@ -14,6 +14,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import fetch from "isomorphic-unfetch";
 import { Typography } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -30,6 +31,11 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center"
+    },
+    progressCircle: {
+      position: "fixed",
+      top: "50%",
+      left: "50%"
     }
   })
 );
@@ -37,17 +43,34 @@ const useStyles = makeStyles(theme =>
 const Home = () => {
   const classes = useStyles();
   const { newLink, setTopic } = React.useContext(storeCTX);
+  const [loader, setLoader] = React.useState(false);
 
+  //check for jwt token to see if user is logged in if false send to signin page
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
-      // fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
-      //   credentials: "include"
-      // })
-      .then(res => res.json())
-      .then(result => {
-        if (result.code !== 200) Router.push("/signin");
+    const checkToken = async () => {
+      setLoader(false);
+      const res = await fetch(`${process.env.API_URL}/api/checkToken`, {
+        credentials: "include"
       });
+      const data = await res.json();
+      if (data.code !== 200) {
+        Router.push("/signin");
+      } else {
+        setLoader(true);
+      }
+    };
+    checkToken();
   }, []);
+  // React.useEffect(() => {
+  //   fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
+  //     // fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
+  //     //   credentials: "include"
+  //     // })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       if (result.code !== 200) Router.push("/signin");
+  //     });
+  // }, []);
 
   React.useEffect(() => {
     setTopic("");
@@ -57,30 +80,38 @@ const Home = () => {
     <Layout>
       <div className={classes.root}>
         <Container className={classes.main} component="main" maxWidth="xs">
-          <Typography className={classes.title} component="h1" variant="h5">
-            Just Another Chat App
-          </Typography>
-          <CreateGroupDialog />
-          <List>
-            {Object.keys(newLink).map(key => (
-              <ListItem
-                button
-                key={key}
-                onClick={() => {
-                  //for the useEffect fetch on [id].js
-                  window.localStorage.setItem(
-                    "topic",
-                    JSON.stringify(newLink[key].title)
-                  );
-                }}
-              >
-                <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
-                  <ListItemText primary={newLink[key].title} />
-                </Link>
-              </ListItem>
-            ))}
-          </List>
-        </Container>{" "}
+          {loader ? (
+            <React.Fragment>
+              <Typography className={classes.title} component="h1" variant="h5">
+                Just Another Chat App
+              </Typography>
+              <CreateGroupDialog />
+              <List>
+                {Object.keys(newLink).map(key => (
+                  <ListItem
+                    button
+                    key={key}
+                    onClick={() => {
+                      //for the useEffect fetch on [id].js
+                      window.localStorage.setItem(
+                        "topic",
+                        JSON.stringify(newLink[key].title)
+                      );
+                    }}
+                  >
+                    <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
+                      <ListItemText primary={newLink[key].title} />
+                    </Link>
+                  </ListItem>
+                ))}
+              </List>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <CircularProgress className={classes.progressCircle} />
+            </React.Fragment>
+          )}
+        </Container>
       </div>
     </Layout>
   );
