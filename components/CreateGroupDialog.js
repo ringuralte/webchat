@@ -16,7 +16,8 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 const useStyles = makeStyles(theme => ({
   addIcon: {
     width: "100px",
-    height: "100px"
+    height: "100px",
+    color: "#eeeeff"
   },
   center: {
     margin: "0 auto"
@@ -25,6 +26,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
+  },
+  createGroupHeader: {
+    color: "#eeeeff"
   }
 }));
 
@@ -34,9 +38,8 @@ const CreateGroupDialog = () => {
 
   const [groupName, changeGroupName] = React.useState("");
 
-  const createGroup = () => {
-    // alert(groupName);
-    fetch("http://localhost:5000/api/createGroup", {
+  const createGroup = async () => {
+    const res = await fetch(`${process.env.API_URL}/api/createGroup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -44,6 +47,7 @@ const CreateGroupDialog = () => {
         groupName
       })
     });
+    //!TODO do something after creating group
     setOpen(false);
   };
 
@@ -60,8 +64,12 @@ const CreateGroupDialog = () => {
       <Button onClick={handleClickOpen}>
         <div className={classes.insideButton}>
           <AddCircleOutlineIcon className={classes.addIcon} />
-          <Typography component="h2" variant="h6">
-            Create Group
+          <Typography
+            className={classes.createGroupHeader}
+            component="h3"
+            variant="h6"
+          >
+            Create A Group
           </Typography>
         </div>
       </Button>

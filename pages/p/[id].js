@@ -7,6 +7,7 @@ import { storeCTX } from "../../components/Store";
 
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
+import Container from "@material-ui/core/Container";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -22,6 +23,12 @@ const useStyles = makeStyles(theme =>
       flexDirection: "column",
       flexGrow: 1,
       paddingBottom: 50
+    },
+    main: {
+      [theme.breakpoints.down("sm")]: {
+        marginTop: theme.spacing(2)
+      },
+      marginTop: theme.spacing(8)
     },
     chatContainer: {
       padding: "1rem",
@@ -89,32 +96,25 @@ const ChatRooms = () => {
   //ran when going to a new group by clicking on header topics
   React.useEffect(() => {
     setLoader(false);
-    fetch(
-      `http://localhost:5000/api/getChats/${window.localStorage.getItem(
-        "topic"
-      )}`,
-      {
-        credentials: "include"
-      }
-    )
-      // fetch(
-      //   `https://fast-oasis-98847.herokuapp.com/api/getChats/${window.localStorage.getItem(
-      //     "topic"
-      //   )}`,
-      //   {
-      //     credentials: "include"
-      //   }
-      // )
-      .then(res => res.json())
-      .then(json => {
-        if (json.code === 200) {
-          dispatch({ type: "FETCH MESSAGE", payload: json.chats });
-          setLoader(true);
-        } else {
-          setTopic("");
-          Router.push("/signin");
+    const getChats = async () => {
+      const res = await fetch(
+        `${process.env.API_URL}/api/getChats/${window.localStorage.getItem(
+          "topic"
+        )}`,
+        {
+          credentials: "include"
         }
-      });
+      );
+      const data = await res.json();
+      if (data.code === 200) {
+        dispatch({ type: "FETCH MESSAGE", payload: data.chats });
+        setLoader(true);
+      } else {
+        setTopic("");
+        Router.push("/signin");
+      }
+    };
+    getChats();
   }, [topic]);
 
   let chats;

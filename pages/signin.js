@@ -1,5 +1,3 @@
-//TODO try switching to functional components and hooks later can't implement a correct fetch method otherwise
-
 import React from "react";
 import Router from "next/router";
 import Button from "@material-ui/core/Button";
@@ -20,7 +18,7 @@ const useStyles = makeStyles(theme =>
     root: {
       width: "100vw",
       position: "relative",
-      background: "linear-gradient(135deg, #eeffff, #00bbcc)",
+      background: "linear-gradient(135deg, #282828, #00bbcc)",
       height: "100vh"
     },
     main: {
@@ -44,7 +42,8 @@ const useStyles = makeStyles(theme =>
       margin: theme.spacing(3, 0, 2)
     },
     linkStyle: {
-      textDecoration: "none"
+      textDecoration: "none",
+      color: "white"
     },
     container: {
       paddingTop: "8vh"
@@ -64,6 +63,10 @@ const useStyles = makeStyles(theme =>
     },
     path2: {
       fill: "#0bf"
+    },
+    title: {
+      fontWeight: "bold",
+      color: "#eeffff"
     }
   })
 );
@@ -83,39 +86,31 @@ const SignIn = () => {
     setTopic("");
   });
 
-  const signIn = e => {
+  const signIn = async e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signIn", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        user: userName,
-        password: password
-      })
-    })
-      // fetch("https://fast-oasis-98847.herokuapp.com/api/signIn", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   credentials: "include",
-      //   body: JSON.stringify({
-      //     user: userName,
-      //     password: password
-      //   })
-      // })
-      .then(res => res.json())
-      .then(response => {
-        if (response.code === 200) {
-          setUserName("");
-          setPassword("");
-          setUser(response.user);
-          window.localStorage.setItem("user", response.user);
-          Router.push("/");
-        } else {
-          setError({ msg: response.msg, display: true });
-        }
-      })
-      .catch(err => alert(err));
+    try {
+      const res = await fetch(`${process.env.API_URL}/api/signIn`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          user: userName,
+          password: password
+        })
+      });
+      const data = await res.json();
+      if (data.code === 200) {
+        setUserName("");
+        setPassword("");
+        setUser(data.user);
+        window.localStorage.setItem("user", data.user);
+        Router.push("/");
+      } else {
+        setError({ msg: data.msg, display: true });
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -124,8 +119,8 @@ const SignIn = () => {
         <Container className={classes.container} component="main" maxWidth="xs">
           <Errorbox error={error} />
           <div className={classes.main}>
-            <Typography className={classes.title} component="h1" variant="h5">
-              Sign In
+            <Typography className={classes.title} component="h2" variant="h5">
+              SIGN IN
             </Typography>
             <form className={classes.form} onSubmit={signIn}>
               <TextField
@@ -149,7 +144,6 @@ const SignIn = () => {
                 id="password"
                 label="Password"
                 name="password"
-                autoFocus
                 value={password}
                 onChange={e => setPassword(e.target.value)}
               />

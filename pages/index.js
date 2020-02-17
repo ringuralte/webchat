@@ -1,4 +1,5 @@
 // TODO update header and home page on creating new group
+// TODO make fetch requests async and await for all
 import React from "react";
 import Router from "next/router";
 import Link from "next/link";
@@ -19,23 +20,30 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      width: "100vw",
       position: "relative",
-      minHeight: "100vh"
+      height: "100%"
     },
     main: {
+      minWidth: "100%",
+      minHeight: "100%",
       [theme.breakpoints.down("sm")]: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(0)
       },
+      color: "#ffcb6b",
       marginTop: theme.spacing(8),
       display: "flex",
       flexDirection: "column",
-      alignItems: "center"
+      alignItems: "center",
+      border: "1px solid black",
+      backgroundColor: "#292d3e"
     },
     progressCircle: {
       position: "fixed",
       top: "50%",
       left: "50%"
+    },
+    title: {
+      paddingTop: "20px"
     }
   })
 );
@@ -54,23 +62,17 @@ const Home = () => {
       });
       const data = await res.json();
       if (data.code !== 200) {
+        window.localStorage.removeItem("topic");
+        window.localStorage.removeItem("user");
         Router.push("/signin");
       } else {
+        //basically just in case someone deleted their localstorage but cookies are still intact
+        window.localStorage.setItem("user", data.user);
         setLoader(true);
       }
     };
     checkToken();
   }, []);
-  // React.useEffect(() => {
-  //   fetch("http://localhost:5000/api/checkToken", { credentials: "include" })
-  //     // fetch("https://fast-oasis-98847.herokuapp.com/api/checkToken", {
-  //     //   credentials: "include"
-  //     // })
-  //     .then(res => res.json())
-  //     .then(result => {
-  //       if (result.code !== 200) Router.push("/signin");
-  //     });
-  // }, []);
 
   React.useEffect(() => {
     setTopic("");
@@ -82,7 +84,7 @@ const Home = () => {
         <Container className={classes.main} component="main" maxWidth="xs">
           {loader ? (
             <React.Fragment>
-              <Typography className={classes.title} component="h1" variant="h5">
+              <Typography className={classes.title} component="h1" variant="h4">
                 Just Another Chat App
               </Typography>
               <CreateGroupDialog />

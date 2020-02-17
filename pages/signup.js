@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme =>
     root: {
       width: "100vw",
       position: "relative",
-      background: "linear-gradient(135deg, #eeffff, #00bbcc)",
+      background: "linear-gradient(135deg, #282828, #00bbcc)",
       height: "100vh"
     },
     main: {
@@ -58,6 +58,10 @@ const useStyles = makeStyles(theme =>
     },
     path2: {
       fill: "#0bf"
+    },
+    title: {
+      color: "white",
+      fontWeight: "bold"
     }
   })
 );
@@ -78,34 +82,28 @@ const SignUp = () => {
     setTopic("");
   });
 
-  const signUp = e => {
+  const signUp = async e => {
     e.preventDefault();
     if (password === confirmPassword) {
-      fetch("http://localhost:5000/api/signUp", {
-        method: "POST",
-        body: JSON.stringify({
-          user: userName,
-          password: password
-        }),
-        headers: { "Content-Type": "application/json" }
-      })
-        // fetch("https://fast-oasis-98847.herokuapp.com/api/signUp", {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     user: userName,
-        //     password: password
-        //   }),
-        //   headers: { "Content-Type": "application/json" }
-        // })
-        .then(res => res.json())
-        .then(response => {
-          if (response.code === 400) {
-            setError({ msg: response.msg, display: true });
-          } else if (response.code === 200) {
-            Router.push("/signin");
-          }
-        })
-        .catch(err => alert(err.message));
+      try {
+        const res = await fetch(`${process.env.API_URL}/api/signUp`, {
+          method: "POST",
+          body: JSON.stringify({
+            user: userName,
+            password: password
+          }),
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        if (data.code === 200) {
+          //!TODO better to instantly sign in the user from server cause its annoying to sign in again
+          Router.push("/signin");
+        } else {
+          setError({ msg: response.msg, display: true });
+        }
+      } catch (error) {
+        alert(error);
+      }
     } else {
       setError({ msg: "Passwords does not match", display: true });
     }
@@ -120,8 +118,8 @@ const SignUp = () => {
         <Container className={classes.container} component="main" maxWidth="xs">
           <Errorbox error={error} />
           <div className={classes.main}>
-            <Typography component="h1" variant="h5">
-              Sign Up
+            <Typography className={classes.title} component="h2" variant="h5">
+              SIGN UP
             </Typography>
             <form className={classes.form} onSubmit={signUp}>
               <TextField
@@ -145,7 +143,6 @@ const SignUp = () => {
                 id="password"
                 label="Password"
                 name="password"
-                autoFocus
                 value={password}
                 onChange={e => setPassword(e.target.value)}
               />
@@ -158,7 +155,6 @@ const SignUp = () => {
                 id="confirm password"
                 label="Confirm Password"
                 name="password"
-                autoFocus
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
               />

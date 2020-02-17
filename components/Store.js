@@ -31,29 +31,27 @@ const Store = props => {
   const [allChats, dispatch] = React.useReducer(reducer, initState);
   const [user, setUser] = React.useState("");
 
-  // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
   //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
   const [topic, setTopic] = React.useState("");
 
+  //again get list of groups from server and save it to the unfortunately named newLink state
   React.useEffect(() => {
-    fetch("http://localhost:5000/api/topics", { credentials: "include" })
-      // fetch("https://fast-oasis-98847.herokuapp.com/api/topics", {
-      //   credentials: "include"
-      // })
-      .then(res => res.json())
-      .then(json => {
-        if (json.code === 200) {
-          setNewLink(json.topics);
-        }
+    const getTopics = async () => {
+      const res = await fetch(`${process.env.API_URL}/api/topics`, {
+        credentials: "include"
       });
+      const data = await res.json();
+      if (data.code === 200) {
+        setNewLink(data.topics);
+      }
+    };
+    getTopics();
   }, []);
 
   if (!socket) {
-    // socket = io("https://fast-oasis-98847.herokuapp.com");
-    socket = io(":5000");
+    socket = io(`${process.env.API_URL}`);
     socket.on("chat message", function(msg) {
-      console.log(msg);
       dispatch({ type: "RECEIVE MESSAGE", payload: msg });
     });
   }
@@ -68,7 +66,6 @@ const Store = props => {
         setUser,
         topic,
         setTopic
-        // dispatchTopic
       }}
     >
       {props.children}

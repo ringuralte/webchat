@@ -18,6 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToApp from "@material-ui/icons/ExitToApp";
+import Button from "@material-ui/core/Button";
 
 import { storeCTX } from "./Store";
 
@@ -44,11 +45,18 @@ const useStyles = makeStyles(theme =>
     menuButton: {
       color: "#eeffff"
     },
+    titleBlock: {
+      flexGrow: 1
+    },
+    title: {
+      fontWeight: "bold",
+      color: "#eeefff"
+    },
     drawerPaper: {
       width: drawerWidth
     },
-    title: {
-      flexGrow: 1
+    headerButton: {
+      color: "white"
     },
     topDrawer: {
       display: "flex",
@@ -76,7 +84,6 @@ const Header = props => {
     storeCTX
   );
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  // const user = Cookies.get("user");
 
   // so that topic state will be preserved on refresh
   React.useEffect(() => {
@@ -90,14 +97,10 @@ const Header = props => {
 
   const signOut = e => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signOut", {
+    fetch(`${process.env.API_URL}/api/signOut`, {
       method: "get",
       credentials: "include"
     })
-      // fetch("https://fast-oasis-98847.herokuapp.com/api/signOut", {
-      //   method: "get",
-      //   credentials: "include"
-      // })
       .then(() => {
         window.localStorage.removeItem("topic");
         window.localStorage.removeItem("user");
@@ -151,24 +154,12 @@ const Header = props => {
       <Divider />
       <List>
         {topics}
-        <ListItem
-          button
-          // onClick={() => {
-          //   // window.localStorage.removeItem("topic");
-          //   setTopic("");
-          // }}
-        >
+        <ListItem button>
           <Link href="/signin">
             <ListItemText primary={"#" + "signin"} />
           </Link>
         </ListItem>
-        <ListItem
-          button
-          // onClick={() => {
-          //   // window.localStorage.removeItem("topic");
-          //   setTopic("");
-          // }}
-        >
+        <ListItem button>
           <Link href="/signup">
             <ListItemText primary={"#" + "signup"} />
           </Link>
@@ -190,9 +181,19 @@ const Header = props => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h5" className={classes.title}>
-              Chat App
-            </Typography>
+            <div className={classes.titleBlock}>
+              <Link href="/">
+                <Button>
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    className={classes.title}
+                  >
+                    Chat App
+                  </Typography>
+                </Button>
+              </Link>
+            </div>
             <Typography variant="subtitle2">{topic.title}</Typography>
           </Toolbar>
         </AppBar>
