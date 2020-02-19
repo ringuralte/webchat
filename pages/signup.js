@@ -99,7 +99,7 @@ const SignUp = () => {
           //!TODO better to instantly sign in the user from server cause its annoying to sign in again
           Router.push("/signin");
         } else {
-          setError({ msg: response.msg, display: true });
+          setError({ msg: data.msg, display: true });
         }
       } catch (error) {
         alert(error);

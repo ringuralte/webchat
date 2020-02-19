@@ -30,12 +30,23 @@ const useStyles = makeStyles(theme =>
         marginTop: theme.spacing(0)
       },
       color: "#ffcb6b",
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(0),
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      border: "1px solid black",
       backgroundColor: "#292d3e"
+    },
+    groupList: {
+      // width: "100%",
+      display: "flex",
+      flexWrap: "wrap",
+      // alignItems: "center",
+      justifyContent: "center"
+    },
+    groupItem: {
+      width: "150px",
+      // border: "2px solid white",
+      textAlign: "center"
     },
     progressCircle: {
       position: "fixed",
@@ -84,13 +95,14 @@ const Home = () => {
         <Container className={classes.main} component="main" maxWidth="xs">
           {loader ? (
             <React.Fragment>
-              <Typography className={classes.title} component="h1" variant="h4">
+              <Typography className={classes.title} component="h1" variant="h5">
                 Just Another Chat App
               </Typography>
               <CreateGroupDialog />
-              <List>
+              <List className={classes.groupList}>
                 {Object.keys(newLink).map(key => (
                   <ListItem
+                    className={classes.groupItem}
                     button
                     key={key}
                     onClick={() => {
@@ -102,7 +114,7 @@ const Home = () => {
                     }}
                   >
                     <Link href="/p/[id]" as={`/p/${newLink[key].title}`}>
-                      <ListItemText primary={newLink[key].title} />
+                      <ListItemText primary={"#" + newLink[key].title} />
                     </Link>
                   </ListItem>
                 ))}

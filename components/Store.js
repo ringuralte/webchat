@@ -55,6 +55,7 @@ const Store = props => {
       dispatch({ type: "RECEIVE MESSAGE", payload: msg });
     });
   }
+
   return (
     <storeCTX.Provider
       value={{
@@ -62,6 +63,7 @@ const Store = props => {
         dispatch,
         sendChatAction,
         newLink,
+        setNewLink,
         user,
         setUser,
         topic,

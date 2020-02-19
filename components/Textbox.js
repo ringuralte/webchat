@@ -61,7 +61,7 @@ const Textbox = () => {
       } else {
         sendChatAction({
           id: data.id,
-          sender: user,
+          sender: window.localStorage.getItem("user"),
           msg: textValue
         });
         changeTextValue("");

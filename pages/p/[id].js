@@ -72,8 +72,6 @@ const ChatRooms = () => {
     storeCTX
   );
   const [loader, setLoader] = React.useState(false);
-  // const user = Cookies.get("user");
-  // const user = window.localStorage.getItem("user");
   const scrollRef = React.useRef(null);
 
   //!TODO the pages load to scroll bottom even when there is not enough
@@ -111,6 +109,8 @@ const ChatRooms = () => {
         setLoader(true);
       } else {
         setTopic("");
+        window.localStorage.removeItem("topic");
+        window.localStorage.removeItem("user");
         Router.push("/signin");
       }
     };

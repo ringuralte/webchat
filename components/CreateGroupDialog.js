@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { Typography } from "@material-ui/core";
@@ -13,10 +12,12 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
+import { storeCTX } from "./Store";
+
 const useStyles = makeStyles(theme => ({
   addIcon: {
-    width: "100px",
-    height: "100px",
+    width: "75px",
+    height: "75px",
     color: "#eeeeff"
   },
   center: {
@@ -35,24 +36,48 @@ const useStyles = makeStyles(theme => ({
 const CreateGroupDialog = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const { newLink, setNewLink } = React.useContext(storeCTX);
 
-  const [groupName, changeGroupName] = React.useState("");
+  const [groupName, setGroupName] = React.useState("");
 
-  const createGroup = async () => {
-    const res = await fetch(`${process.env.API_URL}/api/createGroup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        groupName
-      })
-    });
+  const enterKeyPress = e => {
+    if (e.keyCode == 13) {
+      createGroup(e);
+    }
+  };
+
+  const createGroup = async e => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${process.env.API_URL}/api/createGroup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          groupName
+        })
+      });
+
+      const data = await res.json();
+      if (data.code === 200) {
+        // const prevState = { ...newLink }
+        setNewLink({
+          ...newLink,
+          [data.id]: { title: groupName }
+        });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      alert(error);
+    }
     //!TODO do something after creating group
     setOpen(false);
   };
 
   const handleClickOpen = () => {
     setOpen(true);
+    setGroupName("");
   };
 
   const handleClose = () => {
@@ -86,7 +111,8 @@ const CreateGroupDialog = () => {
             id="name"
             label="Enter Group Name"
             value={groupName}
-            onChange={e => changeGroupName(e.target.value)}
+            onKeyDown={enterKeyPress}
+            onChange={e => setGroupName(e.target.value)}
             fullWidth
           />
         </DialogContent>

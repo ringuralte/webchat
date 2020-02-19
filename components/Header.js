@@ -32,11 +32,16 @@ const useStyles = makeStyles(theme =>
       minHeight: "7vh",
       background: "#292d3e"
     },
-    drawer: {
+    drawerNav: {
       [theme.breakpoints.up("sm")]: {
         width: drawerWidth,
         flexShrink: 0
       }
+    },
+    drawer: {
+      backgroundColor: "#181a1b",
+      minHeight: "100%",
+      color: "#eeeeff"
     },
     appBar: {
       width: "100vw",
@@ -71,8 +76,8 @@ const useStyles = makeStyles(theme =>
     },
     signOut: {
       display: "flex",
-      border: 0,
-      backgroundColor: "inherit"
+      backgroundColor: "inherit",
+      color: "#ff5370"
     }
   })
 );
@@ -87,26 +92,45 @@ const Header = props => {
 
   // so that topic state will be preserved on refresh
   React.useEffect(() => {
-    setTopic({ title: JSON.parse(window.localStorage.getItem("topic")) });
-    setUser(window.localStorage.getItem("user"));
+    let truncatedTopic = JSON.parse(window.localStorage.getItem("topic"));
+    if (truncatedTopic) {
+      if (truncatedTopic.length > 7) {
+        setTopic(`${truncatedTopic.substring(0, 7)}...`);
+      } else {
+        setTopic(truncatedTopic);
+      }
+    }
+    let truncatedName = window.localStorage.getItem("user");
+    //incase username is too long add ...'s after 10 characters
+    if (truncatedName) {
+      if (truncatedName.length > 10) {
+        setUser(`${truncatedName.substring(0, 10)}...`);
+      } else {
+        setUser(truncatedName);
+      }
+    } else {
+      setUser("");
+    }
   }, []);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
 
-  const signOut = e => {
+  const signOut = async e => {
     e.preventDefault();
-    fetch(`${process.env.API_URL}/api/signOut`, {
+    const res = await fetch(`${process.env.API_URL}/api/signOut`, {
       method: "get",
       credentials: "include"
-    })
-      .then(() => {
-        window.localStorage.removeItem("topic");
-        window.localStorage.removeItem("user");
-        setTopic("");
-      })
-      .then(Router.push("/signin"));
+    });
+
+    const data = await res.json();
+    if (data.code === 200) {
+      window.localStorage.removeItem("topic");
+      window.localStorage.removeItem("user");
+      setTopic("");
+      Router.push("/");
+    }
   };
 
   //only show topics and top drawer if user is logged in
@@ -149,7 +173,7 @@ const Header = props => {
   }
 
   const drawer = (
-    <div>
+    <div className={classes.drawer}>
       {topDrawer}
       <Divider />
       <List>
@@ -194,10 +218,10 @@ const Header = props => {
                 </Button>
               </Link>
             </div>
-            <Typography variant="subtitle2">{topic.title}</Typography>
+            <Typography variant="subtitle2">{topic}</Typography>
           </Toolbar>
         </AppBar>
-        <nav aria-label="drawer" className={classes.drawer}>
+        <nav aria-label="drawer" className={classes.drawerNav}>
           <Hidden smUp implementation="css">
             <Drawer
               container={container}
