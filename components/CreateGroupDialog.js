@@ -36,8 +36,12 @@ const useStyles = makeStyles(theme => ({
 const CreateGroupDialog = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const { newLink, setNewLink } = React.useContext(storeCTX);
+  const { newLink, setNewLink, user } = React.useContext(storeCTX);
 
+  const [dialogError, setDialogError] = React.useState({
+    msg: "",
+    display: false
+  });
   const [groupName, setGroupName] = React.useState("");
 
   const enterKeyPress = e => {
@@ -48,7 +52,7 @@ const CreateGroupDialog = () => {
 
   const createGroup = async e => {
     e.preventDefault();
-    try {
+    if (groupName.length < 20) {
       const res = await fetch(`${process.env.API_URL}/api/createGroup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,19 +64,26 @@ const CreateGroupDialog = () => {
 
       const data = await res.json();
       if (data.code === 200) {
-        // const prevState = { ...newLink }
         setNewLink({
           ...newLink,
-          [data.id]: { title: groupName }
+          [data.id]: { title: groupName, user_id: user }
         });
+        setOpen(false);
       } else {
-        throw new Error(data.message);
+        e.persist();
+        setDialogError({
+          msg: data.message,
+          display: true
+        });
       }
-    } catch (error) {
-      alert(error);
+      //!TODO do something after creating group
+    } else {
+      e.persist();
+      setDialogError({
+        msg: "Group name should not be longer than 20 characters",
+        display: true
+      });
     }
-    //!TODO do something after creating group
-    setOpen(false);
   };
 
   const handleClickOpen = () => {
@@ -103,16 +114,21 @@ const CreateGroupDialog = () => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Create Group</DialogTitle>
+        <DialogTitle id="form-dialog-title">Create a new Group</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
+            error={dialogError.display}
+            helperText={dialogError.display ? dialogError.msg : ""}
             id="name"
             label="Enter Group Name"
             value={groupName}
             onKeyDown={enterKeyPress}
-            onChange={e => setGroupName(e.target.value)}
+            onChange={e => {
+              setDialogError(false);
+              setGroupName(e.target.value);
+            }}
             fullWidth
           />
         </DialogContent>

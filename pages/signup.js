@@ -10,8 +10,6 @@ import fetch from "isomorphic-unfetch";
 
 import { storeCTX } from "../components/Store";
 
-import Errorbox from "../components/Errorbox";
-
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -98,7 +96,7 @@ const SignUp = () => {
         if (data.code === 200) {
           //!TODO better to instantly sign in the user from server cause its annoying to sign in again
           Router.push("/signin");
-        } else {
+        } else if (data.code === 23505 || data.code === 22001) {
           setError({ msg: data.msg, display: true });
         }
       } catch (error) {
@@ -116,7 +114,6 @@ const SignUp = () => {
     <Layout>
       <div className={classes.root}>
         <Container className={classes.container} component="main" maxWidth="xs">
-          <Errorbox error={error} />
           <div className={classes.main}>
             <Typography className={classes.title} component="h2" variant="h5">
               SIGN UP
@@ -125,6 +122,8 @@ const SignUp = () => {
               <TextField
                 variant="outlined"
                 margin="normal"
+                error={error.display}
+                helperText={error.display ? error.msg : ""}
                 required
                 fullWidth
                 id="user"

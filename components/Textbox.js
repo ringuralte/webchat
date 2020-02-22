@@ -33,6 +33,8 @@ const Textbox = () => {
   const classes = useStyles();
   const { sendChatAction, user } = React.useContext(storeCTX);
   // const user = window.localStorage.getItem("user");
+  const [lengthError, setLengthError] = React.useState(false);
+  const [helperText, setHelperText] = React.useState("");
 
   const enterKeyPress = e => {
     if (e.keyCode == 13) {
@@ -44,7 +46,9 @@ const Textbox = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     //didn't include sender name in post request cause it uses cookie
-    try {
+    //doing the check at client side but if someone somehow manages to send it still checking it server side
+
+    if (textValue.length < 1000) {
       const res = await fetch(`${process.env.API_URL}/api/postChat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,19 +59,22 @@ const Textbox = () => {
         })
       });
       const data = await res.json();
-      if (data.code === 401) {
-        alert("error:" + data.message);
-        changeTextValue("");
-      } else {
+      if (data.code === 200) {
         sendChatAction({
           id: data.id,
           sender: window.localStorage.getItem("user"),
           msg: textValue
         });
         changeTextValue("");
+      } else {
+        e.persist();
+        setHelperText(data.message);
+        setLengthError(true);
       }
-    } catch (error) {
-      alert("error:" + error.message);
+    } else {
+      e.persist();
+      setHelperText("Message too long < 1000 you are at ");
+      setLengthError(true);
     }
   };
 
@@ -76,10 +83,16 @@ const Textbox = () => {
       <ToolBar className={classes.type}>
         <TextField
           className={classes.chatBox}
+          error={lengthError}
+          id="standard-error-helper-text"
+          helperText={lengthError ? `${helperText}${textValue.length} ` : ""}
           label="Send a chat"
           onKeyDown={enterKeyPress}
           value={textValue}
-          onChange={e => changeTextValue(e.target.value)}
+          onChange={e => {
+            setLengthError(false);
+            changeTextValue(e.target.value);
+          }}
         />
         <Button
           className={classes.chatButton}

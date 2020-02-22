@@ -1,7 +1,5 @@
 import React from "react";
-import Router from "next/router";
 import Link from "next/link";
-// import Cookies from "js-cookie";
 import fetch from "isomorphic-unfetch";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
@@ -20,6 +18,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToApp from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
 
+import DeleteDialog from "./DeleteDialog";
 import { storeCTX } from "./Store";
 
 const drawerWidth = 240;
@@ -55,7 +54,8 @@ const useStyles = makeStyles(theme =>
     },
     title: {
       fontWeight: "bold",
-      color: "#eeefff"
+      color: "#eeefff",
+      textTransform: "none"
     },
     drawerPaper: {
       width: drawerWidth
@@ -94,8 +94,8 @@ const Header = props => {
   React.useEffect(() => {
     let truncatedTopic = JSON.parse(window.localStorage.getItem("topic"));
     if (truncatedTopic) {
-      if (truncatedTopic.length > 7) {
-        setTopic(`${truncatedTopic.substring(0, 7)}...`);
+      if (truncatedTopic.length > 12) {
+        setTopic(`${truncatedTopic.substring(0, 15)}...`);
       } else {
         setTopic(truncatedTopic);
       }
@@ -128,8 +128,10 @@ const Header = props => {
     if (data.code === 200) {
       window.localStorage.removeItem("topic");
       window.localStorage.removeItem("user");
+      window.localStorage.removeItem("creator");
       setTopic("");
-      Router.push("/");
+      // want to force a reload which doesnt happen with Router.push("/")
+      window.location.href = "/";
     }
   };
 
@@ -160,6 +162,10 @@ const Header = props => {
           window.localStorage.setItem(
             "topic",
             JSON.stringify(newLink[key].title)
+          );
+          window.localStorage.setItem(
+            "creator",
+            JSON.stringify(newLink[key].user_id)
           );
           setTopic(newLink[key]);
           setMobileOpen(!mobileOpen);
@@ -213,12 +219,12 @@ const Header = props => {
                     variant="h5"
                     className={classes.title}
                   >
-                    Chat App
+                    ChatApp
                   </Typography>
                 </Button>
               </Link>
             </div>
-            <Typography variant="subtitle2">{topic}</Typography>
+            <DeleteDialog />
           </Toolbar>
         </AppBar>
         <nav aria-label="drawer" className={classes.drawerNav}>

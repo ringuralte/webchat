@@ -1,5 +1,4 @@
-// TODO update header and home page on creating new group
-// TODO make fetch requests async and await for all
+//!TODO material-ui comes with error handling for it's textfield component so replace those with your errorbox
 import React from "react";
 import Router from "next/router";
 import Link from "next/link";
@@ -37,15 +36,15 @@ const useStyles = makeStyles(theme =>
       backgroundColor: "#292d3e"
     },
     groupList: {
-      // width: "100%",
       display: "flex",
       flexWrap: "wrap",
-      // alignItems: "center",
       justifyContent: "center"
     },
     groupItem: {
-      width: "150px",
-      // border: "2px solid white",
+      [theme.breakpoints.down("xs")]: {
+        width: "200px"
+      },
+      width: "250px",
       textAlign: "center"
     },
     progressCircle: {
@@ -75,6 +74,7 @@ const Home = () => {
       if (data.code !== 200) {
         window.localStorage.removeItem("topic");
         window.localStorage.removeItem("user");
+        window.localStorage.removeItem("creator");
         Router.push("/signin");
       } else {
         //basically just in case someone deleted their localstorage but cookies are still intact
@@ -110,6 +110,10 @@ const Home = () => {
                       window.localStorage.setItem(
                         "topic",
                         JSON.stringify(newLink[key].title)
+                      );
+                      window.localStorage.setItem(
+                        "creator",
+                        JSON.stringify(newLink[key].user_id)
                       );
                     }}
                   >

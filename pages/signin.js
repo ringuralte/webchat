@@ -11,7 +11,6 @@ import fetch from "isomorphic-unfetch";
 import { storeCTX } from "../components/Store";
 
 import Layout from "../components/Layout";
-import Errorbox from "../components/Errorbox";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -77,39 +76,41 @@ const SignIn = () => {
   const [password, setPassword] = React.useState("");
   const { setUser, setTopic } = React.useContext(storeCTX);
 
-  const [error, setError] = React.useState({
+  const [nameError, setNameError] = React.useState({
     msg: "",
     display: false
   });
 
+  const [passwordError, setPasswordError] = React.useState({
+    msg: "",
+    display: false
+  });
   React.useEffect(() => {
     setTopic("");
   });
 
   const signIn = async e => {
     e.preventDefault();
-    try {
-      const res = await fetch(`${process.env.API_URL}/api/signIn`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          user: userName,
-          password: password
-        })
-      });
-      const data = await res.json();
-      if (data.code === 200) {
-        setUserName("");
-        setPassword("");
-        setUser(data.user);
-        window.localStorage.setItem("user", data.user);
-        Router.push("/");
-      } else {
-        setError({ msg: data.msg, display: true });
-      }
-    } catch (error) {
-      alert(error);
+    const res = await fetch(`${process.env.API_URL}/api/signIn`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        user: userName,
+        password: password
+      })
+    });
+    const data = await res.json();
+    if (data.code === 200) {
+      setUserName("");
+      setPassword("");
+      setUser(data.user);
+      window.localStorage.setItem("user", data.user);
+      Router.push("/");
+    } else if (data.code === 401) {
+      setPasswordError({ msg: data.msg, display: true });
+    } else if (data.code === 400) {
+      setNameError({ msg: data.msg, display: true });
     }
   };
 
@@ -117,7 +118,6 @@ const SignIn = () => {
     <Layout>
       <div className={classes.root}>
         <Container className={classes.container} component="main" maxWidth="xs">
-          <Errorbox error={error} />
           <div className={classes.main}>
             <Typography className={classes.title} component="h2" variant="h5">
               SIGN IN
@@ -126,6 +126,8 @@ const SignIn = () => {
               <TextField
                 variant="outlined"
                 margin="normal"
+                error={nameError.display}
+                helperText={nameError.display ? nameError.msg : ""}
                 required
                 fullWidth
                 id="user"
@@ -138,6 +140,8 @@ const SignIn = () => {
               <TextField
                 variant="outlined"
                 margin="normal"
+                error={passwordError.display}
+                helperText={passwordError.display ? passwordError.msg : ""}
                 required
                 fullWidth
                 type="password"
